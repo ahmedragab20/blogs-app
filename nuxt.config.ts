@@ -6,9 +6,8 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss',
     '@nuxtjs/color-mode',
     'nuxt-vuefire',
-    // '@nuxtjs/eslint-module',
     '@pinia/nuxt',
-    // '@nuxtjs/stylelint-module',
+    'nuxt-icon',
   ],
   // Defaults options
   directus: {
@@ -24,6 +23,7 @@ export default defineNuxtConfig({
   tailwindcss: {
     // add '~tailwind.config` alias
     exposeConfig: true,
+    config: require('./tailwind.config.js'),
   },
   colorMode: {
     preference: 'system', // default theme

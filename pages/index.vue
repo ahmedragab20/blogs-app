@@ -1,27 +1,6 @@
 <template>
-  <div>
-    <h1>Home</h1>
-    <div class="h-screen flex justify-center items-center flex-col w-full">
-      <div class="flex p-3 border rounded-lg dark:bg-slate-500 dark:text-white sepia:bg-red-100">
-        <pre>
-        <code>
-          {{ skills }}
-        </code>
-      </pre>
-      </div>
-      <div v-for="skill in skills">
-        {{ skill.name }}
-      </div>
-      <div>
-        <h1>Color mode: {{ $colorMode.value }}</h1>
-        <select v-model="$colorMode.preference">
-          <option value="system">System</option>
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-          <option value="sepia">Sepia</option>
-        </select>
-      </div>
-    </div>
+  <div class="flex justify-center items-center min-h-screen">
+    <h1 class="dark:text-white">Home</h1>
   </div>
 </template>
 

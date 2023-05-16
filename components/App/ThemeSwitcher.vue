@@ -1,9 +1,17 @@
 <template>
-  <div>
-    <button @click="toggleTheme" class="text-2xl sm:text-3xl">{{ themeIcon }}</button>
+  <div @click="toggleTheme" class="cursor-pointer">
+    <div class="flex justify-center items-center">
+      <Icon :name="themeIcon?.icon || ''" :color="themeIcon?.color" :size="themeIcon?.size" />
+    </div>
   </div>
 </template>
 <script setup lang="ts">
+  interface Icon {
+    icon: string;
+    color: string;
+    size: string;
+  }
+
   const colorMode = useColorMode();
 
   const toggleTheme = () => {
@@ -16,13 +24,25 @@
     }
   };
 
-  const themeIcon = computed(() => {
+  const themeIcon = computed<Icon | undefined>(() => {
     if (colorMode.preference === 'light') {
-      return '🌞';
+      return {
+        icon: 'solar:sun-fog-broken',
+        color: 'white',
+        size: '1.2rem',
+      };
     } else if (colorMode.preference === 'dark') {
-      return '🌚';
+      return {
+        icon: 'solar:moon-fog-broken',
+        color: 'white',
+        size: '1.2rem',
+      };
     } else if (colorMode.preference === 'sepia') {
-      return '🌾';
+      return {
+        icon: 'solar:waterdrop-broken',
+        color: 'black',
+        size: '1.2rem',
+      };
     }
   });
 </script>
