@@ -1,6 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: ['@nuxt/devtools', 'nuxt-directus', '@nuxtjs/tailwindcss', '@nuxtjs/color-mode'],
+  modules: [
+    '@nuxt/devtools',
+    'nuxt-directus',
+    '@nuxtjs/tailwindcss',
+    '@nuxtjs/color-mode',
+    'nuxt-vuefire',
+    // '@nuxtjs/eslint-module',
+    '@pinia/nuxt',
+    // '@nuxtjs/stylelint-module',
+  ],
   // Defaults options
   directus: {
     url: 'http://localhost:8055/items',
@@ -20,5 +29,28 @@ export default defineNuxtConfig({
     preference: 'system', // default theme
     dataValue: 'theme', // activate data-theme in <html> tag
     classSuffix: '',
+  },
+  vuefire: {
+    auth: true,
+    admin: {
+      serviceAccount: './admin.json',
+    },
+
+    appCheck: {
+      debug: process.env.NODE_ENV !== 'production',
+      isTokenAutoRefreshEnabled: true,
+      provider: 'ReCaptchaV3',
+      key: 'AIzaSyDYZwMiELbHI7Z_rDQC-SsXWEAv5KCGuTA',
+    },
+
+    config: {
+      apiKey: 'AIzaSyDYZwMiELbHI7Z_rDQC-SsXWEAv5KCGuTA',
+      authDomain: 'auth-79e70.firebaseapp.com',
+      projectId: 'auth-79e70',
+      storageBucket: 'auth-79e70.appspot.com',
+      messagingSenderId: '1067954839109',
+      appId: '1:1067954839109:web:f3319baa7bf3ad538a0d2c',
+      measurementId: 'G-6CNT03649G',
+    },
   },
 });

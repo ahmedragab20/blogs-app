@@ -1,46 +1,20 @@
 <template>
-  <div class="h-screen flex justify-center items-center flex-col w-full">
-    <div class="flex p-3 border rounded-lg dark:bg-slate-500 dark:text-white sepia:bg-red-100">
-      <pre>
-        <code>
-          {{ skills }}
-        </code>
-      </pre>
+  <NuxtLayout :name="layout">
+    <!-- The Wrapper of the pages -->
+    <div class="dark:bg-stone-950 bg-slate-100">
+      <!-- header -->
+      <div class="p-5">
+        <div class="flex justify-end">
+          <AppThemeSwitcher
+            class="w-10 sm:w-9 h-10 sm:h-9 flex justify-center items-center rounded-full dark:bg-slate-800 bg-slate-300 shadow-sm"
+          />
+        </div>
+      </div>
+      <NuxtPage />
     </div>
-    <div v-for="skill in skills">
-      {{ skill.name }}
-    </div>
-    <div>
-      <h1>Color mode: {{ $colorMode.value }}</h1>
-      <select v-model="$colorMode.preference">
-        <option value="system">System</option>
-        <option value="light">Light</option>
-        <option value="dark">Dark</option>
-        <option value="sepia">Sepia</option>
-      </select>
-    </div>
-  </div>
+  </NuxtLayout>
 </template>
 <script setup lang="ts">
-  interface Skill {
-    id: string;
-    name: string;
-    date_updated: string | null;
-    years_of_experience: number;
-  }
-
-  const config = useRuntimeConfig();
-
-  const colorMode = useColorMode();
-  console.log(colorMode.preference);
-
-  const skills = ref<Skill[]>([]);
-  const fetchData = async () => {
-    const { data }: any = await useFetch(`${config.public.baseURL}/Skills`);
-    skills.value = data.value?.data;
-  };
-
-  onMounted(async () => {
-    await fetchData();
-  });
+  //TODO: add icons module
+  const layout = 'default'; // you can remove it as long as you named it default
 </script>
