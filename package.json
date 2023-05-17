@@ -12,6 +12,7 @@
     "@nuxt/devtools": "^0.4.6",
     "@nuxtjs/color-mode": "^3.2.0",
     "@nuxtjs/eslint-module": "^4.0.2",
+    "@nuxtjs/google-fonts": "^3.0.0",
     "@nuxtjs/stylelint-module": "^5.0.1",
     "@nuxtjs/tailwindcss": "^6.6.8",
     "@types/node": "^18",

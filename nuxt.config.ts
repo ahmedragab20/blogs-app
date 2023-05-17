@@ -8,20 +8,20 @@ export default defineNuxtConfig({
     'nuxt-vuefire',
     '@pinia/nuxt',
     'nuxt-icon',
+    '@nuxtjs/google-fonts',
   ],
-  // Defaults options
   directus: {
     url: 'http://localhost:8055/items',
     autoFetch: true,
     devtools: true,
   },
+  css: ['~/assets/css/animation.css'],
   runtimeConfig: {
     public: {
       baseURL: process.env.BASE_URL,
     },
   },
   tailwindcss: {
-    // add '~tailwind.config` alias
     exposeConfig: true,
     config: require('./tailwind.config.js'),
   },
@@ -29,6 +29,12 @@ export default defineNuxtConfig({
     preference: 'system', // default theme
     dataValue: 'theme', // activate data-theme in <html> tag
     classSuffix: '',
+  },
+  googleFonts: {
+    families: {
+      'Headland One': true,
+      Poppins: true,
+    },
   },
   vuefire: {
     auth: true,

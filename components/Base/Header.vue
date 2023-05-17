@@ -12,16 +12,27 @@
     </div>
     <!-- Logo -->
     <div class="w-[70%] flex justify-center items-center py-1">
-      <NuxtLink to="/" class="text-2xl font-bold text-slate-900 dark:text-slate-100">
-        <span class="text-slate-500 dark:text-slate-400">Nuxt</span>
-        <span class="text-slate-900 dark:text-slate-100">Solar</span>
+      <NuxtLink to="/" class="text-2xl font-bold text-slate-900 font-headline dark:text-slate-100">
+        <span class="text-slate-500 dark:text-slate-400">AR</span>
+        <span class="text-slate-900 dark:text-slate-100">Blogs</span>
       </NuxtLink>
     </div>
     <!-- menu -->
     <div
       class="w-[15%] flex justify-center items-center min-h-full py-1 px-1 sm:px-4 border-l dark:border-slate-100 border-slate-900"
     >
-      <Icon name="solar:hamburger-menu-linear" size="2rem" />
+      <Icon
+        @click="menuToggler()"
+        class="cursor-pointer"
+        name="solar:hamburger-menu-linear"
+        size="2rem"
+        :class="$colorMode.preference === 'dark' ? 'text-slate-100' : 'text-slate-950'"
+      />
     </div>
   </div>
 </template>
+<script setup lang="ts">
+  const props = defineProps<{
+    menuToggler: () => void;
+  }>();
+</script>
