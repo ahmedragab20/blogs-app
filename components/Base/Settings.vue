@@ -43,7 +43,7 @@
               class="min-w-[90px] cursor-pointer duration-300 hover:scale-105 max-w-[90px] max-h-[180px] m-1 rounded-md shadow-sm"
               :class="
                 secondaryColor === color
-                  ? `ring ring-${secondaryColor}-500`
+                  ? `ring ring-gray-400 dark:ring-gray-500`
                   : `ring ring-transparent`
               "
               @click="selectSecondaryColor(color)"
