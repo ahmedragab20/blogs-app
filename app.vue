@@ -34,6 +34,6 @@
    *
    * // 1. Check if there is a changes have been made before saving the new settings
    * // 2. fix 'nuxt-color-mode' in the local storage
-   * 3. add shortcut to toggle the settings modal
+   * // 3. add shortcut to toggle the settings modal
    */
 </script>
