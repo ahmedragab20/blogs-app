@@ -1,15 +1,9 @@
 <template>
   <div class="flex items-center justify-center min-h-screen">
     <UContainer class="mt-4 border-x">
-      <AppConfirm
-        class="max-w-[520px] bg-slate-100 rounded-lg"
-        :submit="() => {}"
-        :cancel="() => {}"
-      >
-        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi voluptas officiis voluptatem
-        ducimus minus, dicta sit ipsum laudantium eos, error possimus! Quis quasi est nemo dolore
-        numquam facere omnis dolor!
-      </AppConfirm>
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim veritatis assumenda cumque,
+      eaque eum itaque repellat nobis repellendus animi, architecto maxime quae soluta odit autem
+      necessitatibus, repudiandae facere commodi unde?
     </UContainer>
   </div>
 </template>

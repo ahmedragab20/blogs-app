@@ -146,7 +146,7 @@
 </template>
 <script setup lang="ts">
   const emit = defineEmits<{
-    (e: 'close'): void;
+    (e: 'close', haveDataChanged?: boolean): void;
   }>();
 
   const colorMode = useColorMode();
@@ -201,16 +201,18 @@
     selectedTheme.value = mode;
   };
 
+  const colorModeChanged = computed<boolean>(() => {
+    const de = document.documentElement;
+    const deThemeClass = de.className;
+    return selectedTheme.value !== colorMode.preference || deThemeClass !== colorMode.preference;
+  });
+
   const haveDataChanged = computed<boolean>(() => {
     return (
       primaryColor.value !== appConfig.ui.primary ||
       secondaryColor.value !== appConfig.ui.gray ||
-      selectedTheme.value !== colorMode.preference
+      colorModeChanged.value
     );
-  });
-
-  const colorModeChanged = computed<boolean>(() => {
-    return selectedTheme.value !== colorMode.preference;
   });
 
   const rememberChanges = ref<boolean>(true);
@@ -225,9 +227,36 @@
     };
   });
 
+  const updateThemeLocally = () => {
+    // that helps when we don't wanna remember the changes
+    const w: any = window;
+    const de = document.documentElement;
+
+    if (selectedTheme.value !== 'system') {
+      de.className = selectedTheme.value;
+
+      return;
+    }
+
+    // @ts-ignore
+    function prefersColorScheme(suffix) {
+      return w.matchMedia('(prefers-color-scheme' + suffix + ')');
+    }
+    if (w.matchMedia && prefersColorScheme('').media !== 'not all') {
+      // @ts-ignore
+      for (const colorScheme of knownColorSchemes) {
+        if (prefersColorScheme(':' + colorScheme).matches) {
+          de.className = colorScheme;
+        }
+      }
+    }
+
+    //?? you can look up the original function to detect the color scheme in the source code from here: https://github.com/nuxt-modules/color-mode/blob/master/src/script.ts#L61
+  };
+
   const applyChanges = () => {
     if (!haveDataChanged.value) {
-      emit('close');
+      emit('close', false);
 
       return;
     }
@@ -235,17 +264,17 @@
     appConfig.ui.primary = primaryColor.value;
     appConfig.ui.gray = secondaryColor.value;
 
-    if (colorModeChanged.value) {
-      colorMode.value = selectedTheme.value;
-      colorMode.preference = selectedTheme.value;
-    }
-
     if (rememberChanges.value) {
       const settings = JSON.stringify(appSettings.value);
       localStorage.setItem('appSettings', settings);
-    }
 
-    emit('close');
+      if (colorModeChanged.value) {
+        colorMode.value = selectedTheme.value;
+        colorMode.preference = selectedTheme.value;
+      }
+    }
+    updateThemeLocally();
+    emit('close', true);
   };
 
   onMounted(() => {

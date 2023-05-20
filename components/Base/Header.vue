@@ -30,13 +30,14 @@
 
   <!-- settings modal -->
   <UModal v-model="settingsModal">
-    <BaseSettings @close="settingsModal = false" />
+    <BaseSettings @close="onSettingsClose" />
   </UModal>
 </template>
 <script setup lang="ts">
   const props = defineProps<{
     menuToggler: () => void;
   }>();
+  const toast = useToast();
 
   const presetButton = {
     rounded: 'rounded-full',
@@ -46,5 +47,11 @@
 
   const settingsToggler = () => {
     settingsModal.value = !settingsModal.value;
+  };
+
+  const onSettingsClose = (haveDataChanged?: boolean) => {
+    settingsModal.value = false;
+
+    if (haveDataChanged) toast.add({ title: `your settings have been saved correctly` });
   };
 </script>
