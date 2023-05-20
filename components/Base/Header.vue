@@ -43,8 +43,6 @@
   const settingsModal = ref(false);
 
   const settingsToggler = () => {
-    console.log('settings toggler');
-
     settingsModal.value = !settingsModal.value;
   };
 
