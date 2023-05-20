@@ -27,7 +27,7 @@
             >
               <ColorsPlaceholder
                 :primary-bg="`bg-${color}-500`"
-                :secondary-bg="`bg-${secondaryColor}-500`"
+                :secondary-bg="getSecondaryColor(secondaryColor)"
               />
             </div>
           </div>
@@ -35,6 +35,7 @@
         <!-- secondary -->
         <div>
           <h5 class="mb-1 text-gray-500">Secondary color</h5>
+
           <div class="flex w-full gap-2 px-1 py-2 overflow-x-auto">
             <div
               v-for="color in secondaryColorsSorted"
@@ -49,7 +50,7 @@
             >
               <ColorsPlaceholder
                 :primary-bg="`bg-${primaryColor}-500`"
-                :secondary-bg="`bg-${color}-500`"
+                :secondary-bg="getSecondaryColor(color)"
               />
             </div>
           </div>
@@ -145,6 +146,7 @@
   </UCard>
 </template>
 <script setup lang="ts">
+  import colors from '#tailwind-config/theme/colors';
   const emit = defineEmits<{
     (e: 'close', haveDataChanged?: boolean): void;
   }>();
@@ -187,6 +189,14 @@
     if (!color) return;
 
     secondaryColor.value = color;
+  };
+
+  const getSecondaryColor = (color: string): string => {
+    if (!color) {
+      throw new Error("Color can't be empty");
+    }
+
+    return (colors as any)?.[color][colorMode.value === 'dark' ? 400 : 500];
   };
 
   const selectedTheme = ref<string>('system'); // fallback to system
@@ -280,6 +290,7 @@
   onMounted(() => {
     primaryColor.value = appConfig.ui.primary;
     secondaryColor.value = appConfig.ui.gray;
+
     selectedTheme.value = colorMode.preference;
   });
 </script>
