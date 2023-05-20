@@ -6,7 +6,7 @@
         :key="link.id"
         :to="link.path"
         active-class="shadow-md shadow-slate-500"
-        class="w-1/2 sm:w-1/4 dark:text-white text-stone-950 border border-slate-100 dark:border-stone-950 flex justify-center items-center p-3 sm:p-5 select-none"
+        class="w-1/2 sm:w-1/4 text-white dark:text-stone-950 border border-slate-100 dark:border-stone-950 flex justify-center items-center p-3 sm:p-5 select-none"
       >
         {{ link.name }}
       </NuxtLink>
@@ -15,6 +15,7 @@
 </template>
 <script setup lang="ts">
   const user = await getCurrentUser();
+  console.log({ user });
 
   const links = computed(() => {
     const global = [

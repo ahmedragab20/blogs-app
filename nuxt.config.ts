@@ -1,14 +1,11 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   modules: [
     '@nuxt/devtools',
     'nuxt-directus',
-    '@nuxtjs/tailwindcss',
-    '@nuxtjs/color-mode',
     'nuxt-vuefire',
     '@pinia/nuxt',
-    'nuxt-icon',
     '@nuxtjs/google-fonts',
+    '@nuxthq/ui',
   ],
   directus: {
     url: 'http://localhost:8055/items',
@@ -20,15 +17,6 @@ export default defineNuxtConfig({
     public: {
       baseURL: process.env.BASE_URL,
     },
-  },
-  tailwindcss: {
-    exposeConfig: true,
-    config: require('./tailwind.config.js'),
-  },
-  colorMode: {
-    preference: 'system', // default theme
-    dataValue: 'theme', // activate data-theme in <html> tag
-    classSuffix: '',
   },
   googleFonts: {
     families: {

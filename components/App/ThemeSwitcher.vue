@@ -1,8 +1,6 @@
 <template>
   <div @click="toggleTheme" class="cursor-pointer">
-    <div class="flex justify-center items-center">
-      <Icon :name="themeIcon?.icon || ''" :color="themeIcon?.color" :size="themeIcon?.size" />
-    </div>
+    <div class="flex justify-center items-center">+</div>
   </div>
 </template>
 <script setup lang="ts">
@@ -24,11 +22,11 @@
     }
   };
 
-  const themeIcon = computed<Icon | undefined>(() => {
+  const themeIcon = computed<Icon>(() => {
     if (colorMode.preference === 'light') {
       return {
         icon: 'solar:sun-fog-broken',
-        color: 'white',
+        color: 'black',
         size: '1.2rem',
       };
     } else if (colorMode.preference === 'dark') {
@@ -41,6 +39,12 @@
       return {
         icon: 'solar:waterdrop-broken',
         color: 'black',
+        size: '1.2rem',
+      };
+    } else {
+      return {
+        icon: '',
+        color: '',
         size: '1.2rem',
       };
     }

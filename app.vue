@@ -7,6 +7,6 @@
 <style>
   html,
   body {
-    @apply transition-all ease-linear duration-700 font-body;
+    @apply transition-all ease-linear duration-700;
   }
 </style>
