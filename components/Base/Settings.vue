@@ -20,13 +20,13 @@
               class="min-w-[90px] cursor-pointer duration-300 hover:scale-105 max-w-[90px] max-h-[180px] m-1 rounded-md shadow-sm"
               :class="
                 primaryColor === color
-                  ? `ring ring-${color}-400 dark:ring-${color}-500`
+                  ? `ring ring-${color}-600 dark:ring-${color}-500`
                   : `ring ring-transparent`
               "
               @click="selectPrimaryColor(color)"
             >
               <ColorsPlaceholder
-                :primary-bg="`bg-${color}-500`"
+                :primary-bg="`dark:bg-${color}-500 bg-${color}-600`"
                 :secondary-bg="getSecondaryColor(secondaryColor)"
               />
             </div>

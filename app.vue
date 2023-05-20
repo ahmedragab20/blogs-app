@@ -1,5 +1,5 @@
 <template>
-  <div id="ragab-app">
+  <div id="ragab-app" class="dark:bg-gray-900 bg-gray-50">
     <NuxtLayout v-if="loaded" :name="layout"></NuxtLayout>
 
     <!-- 🤷🏻‍♂️ - so global -->

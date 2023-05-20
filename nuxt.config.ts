@@ -1,4 +1,5 @@
 export default defineNuxtConfig({
+  css: ['~/assets/css/animation.css'],
   modules: [
     '@nuxt/devtools',
     'nuxt-directus',
@@ -12,7 +13,6 @@ export default defineNuxtConfig({
     autoFetch: true,
     devtools: true,
   },
-  css: ['~/assets/css/animation.css'],
   runtimeConfig: {
     public: {
       baseURL: process.env.BASE_URL,

@@ -2,7 +2,7 @@
   <div>
     <div v-if="defaultSlotExists" class="flex flex-col p-3 sm:p-5">
       <div>
-        <h3 class="mb-2 text-lg font-semibold">
+        <h3 class="initial:mb-2 initial:text-lg initial:font-semibold" :class="labelClass">
           {{ label }}
         </h3>
         <!-- content -->
@@ -14,7 +14,7 @@
         <div class="flex gap-1">
           <UButton
             :ui="
-              ui || {
+              btnUI || {
                 rounded: 'rounded-full',
               }
             "
@@ -25,7 +25,7 @@
           />
           <UButton
             :ui="
-              ui || {
+              btnUI || {
                 rounded: 'rounded-full',
               }
             "
@@ -48,6 +48,7 @@
   const props = withDefaults(
     defineProps<{
       label?: string;
+      labelClass?: string;
       submit: () => void;
       cancel: () => void;
       submitIcon?: string;
@@ -55,7 +56,7 @@
       submitLabel?: string;
       cancelLabel?: string;
       variant?: string;
-      ui?: Partial<UI>;
+      btnUI?: Partial<UI>;
     }>(),
     {
       label: 'confirming with you!',

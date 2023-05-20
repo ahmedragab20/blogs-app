@@ -11,7 +11,7 @@
       </Transition>
     </div>
     <!-- content -->
-    <div class="md:w-[70%] sm:w-11/12 w-full sm:border-x px-3 mx-auto pt-[10vh]">
+    <div class="md:w-[70%] sm:w-11/12 w-full px-3 mx-auto pt-[10vh]">
       <NuxtPage />
     </div>
   </div>
