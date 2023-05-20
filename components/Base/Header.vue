@@ -2,12 +2,14 @@
   <div class="flex justify-between w-full min-h-[8vh] backdrop-blur-md">
     <!-- switcher -->
     <div class="w-[15%] min-h-full flex justify-center items-center px-1 py-1 sm:px-">
-      <UButton
-        @click="settingsToggler"
-        icon="i-heroicons-wrench"
-        variant="soft"
-        :ui="presetButton"
-      />
+      <UTooltip class="hidden md:flex" text="app settings" :shortcuts="[metaSymbol, '.']">
+        <UButton
+          @click="settingsToggler"
+          icon="i-heroicons-wrench"
+          variant="soft"
+          :ui="presetButton"
+        />
+      </UTooltip>
     </div>
     <!-- Logo -->
     <div class="w-[70%] flex justify-center items-center py-1">
@@ -21,14 +23,17 @@
   </div>
 
   <!-- settings modal -->
-  <UModal v-model="settingsModal">
+  <UModal v-model="settingsModal" name="settingsModal">
     <BaseSettings @close="onSettingsClose" />
   </UModal>
 </template>
 <script setup lang="ts">
+  const { metaSymbol, usingInput } = useShortcuts();
+
   const props = defineProps<{
     menuToggler: () => void;
   }>();
+
   const toast = useToast();
 
   const presetButton = {
@@ -38,6 +43,8 @@
   const settingsModal = ref(false);
 
   const settingsToggler = () => {
+    console.log('settings toggler');
+
     settingsModal.value = !settingsModal.value;
   };
 
@@ -46,4 +53,11 @@
 
     if (haveDataChanged) toast.add({ title: `your settings have been saved correctly` });
   };
+
+  defineShortcuts({
+    'meta_.': {
+      usingInput: true,
+      handler: () => settingsToggler(),
+    },
+  });
 </script>
