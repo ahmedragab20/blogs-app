@@ -6,8 +6,11 @@
     <div
       class="w-[15%] min-h-full flex justify-center items-center px-1 py-1 sm:px-4 border-r dark:border-slate-100 border-slate-900"
     >
-      <AppThemeSwitcher
-        class="flex items-center justify-center w-10 h-10 rounded-full shadow-sm sm:w-9 sm:h-9 dark:bg-slate-800 bg-slate-300"
+      <UButton
+        @click="settingsToggler"
+        icon="i-heroicons-wrench"
+        variant="soft"
+        :ui="presetButton"
       />
     </div>
     <!-- Logo -->
@@ -24,9 +27,24 @@
       =
     </div>
   </div>
+
+  <!-- settings modal -->
+  <UModal v-model="settingsModal">
+    <BaseSettings @close="settingsModal = false" />
+  </UModal>
 </template>
 <script setup lang="ts">
   const props = defineProps<{
     menuToggler: () => void;
   }>();
+
+  const presetButton = {
+    rounded: 'rounded-full',
+  };
+
+  const settingsModal = ref(false);
+
+  const settingsToggler = () => {
+    settingsModal.value = !settingsModal.value;
+  };
 </script>
