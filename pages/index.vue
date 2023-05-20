@@ -1,9 +1,15 @@
 <template>
   <div class="flex items-center justify-center min-h-screen">
     <UContainer class="mt-4 border-x">
-      Lorem ipsum dolor, sit amet consectetur adipisicing elit. Corporis, unde blanditiis. Quam
-      voluptates eum labore expedita cum rem architecto, vero eos perspiciatis odio. Blanditiis
-      consectetur ipsum commodi corrupti assumenda nobis.
+      <AppConfirm
+        class="max-w-[520px] bg-slate-100 rounded-lg"
+        :submit="() => {}"
+        :cancel="() => {}"
+      >
+        Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quasi voluptas officiis voluptatem
+        ducimus minus, dicta sit ipsum laudantium eos, error possimus! Quis quasi est nemo dolore
+        numquam facere omnis dolor!
+      </AppConfirm>
     </UContainer>
   </div>
 </template>

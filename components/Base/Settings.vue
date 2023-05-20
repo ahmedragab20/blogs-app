@@ -119,7 +119,7 @@
             }"
             icon="i-heroicons-check-20-solid"
             label="Apply"
-            @click="requiresReload ? toggleConfirmationToReload() : done()"
+            @click="applyChanges"
           />
         </div>
         <div class="flex items-center">
@@ -143,48 +143,6 @@
       </div>
     </template>
   </UCard>
-
-  <!-- confirmation to reload the page -->
-  <!-- TODO:: make it shared -->
-  <UModal v-model="confirmationToReload">
-    <div class="flex flex-col p-5">
-      <div>
-        <h3 class="mb-2 text-lg font-semibold">Reload the page?</h3>
-        <p class="px-1 text-sm text-gray-500 dark:text-gray-400">
-          you're choosing to use your device's theme, for us to make sure that we've picked up the
-          right colors it's better to reload the page.
-        </p>
-        <div class="px-1">
-          <small class="text-gray-400 dark:text-gray-500">
-            this case only happens when you're using the system theme and then you change the
-            settings without changing the theme, so we need to double check that we're gonna use the
-            correct colors.
-          </small>
-        </div>
-      </div>
-      <div class="flex mt-3">
-        <div class="flex gap-1">
-          <UButton
-            :ui="{
-              rounded: 'rounded-full',
-            }"
-            icon="i-heroicons-arrow-right-circle"
-            label="No need to reload"
-            @click="done"
-          />
-          <UButton
-            :ui="{
-              rounded: 'rounded-full',
-            }"
-            icon="i-heroicons-arrow-path"
-            label="Reload"
-            variant="soft"
-            @click="reload"
-          />
-        </div>
-      </div>
-    </div>
-  </UModal>
 </template>
 <script setup lang="ts">
   const emit = defineEmits<{
@@ -243,7 +201,7 @@
     selectedTheme.value = mode;
   };
 
-  const hasDataChanged = computed<boolean>(() => {
+  const haveDataChanged = computed<boolean>(() => {
     return (
       primaryColor.value !== appConfig.ui.primary ||
       secondaryColor.value !== appConfig.ui.gray ||
@@ -251,11 +209,8 @@
     );
   });
 
-  const requiresReload = computed<boolean>(() => {
-    // this is a workaround for a bug in the colorMode plugin, it turns the colors to light mode if you choose system mode and it was already in system mode, so wee need to reload the page to fix it
-    return (
-      colorMode.preference === 'system' && selectedTheme.value === 'system' && hasDataChanged.value
-    );
+  const colorModeChanged = computed<boolean>(() => {
+    return selectedTheme.value !== colorMode.preference;
   });
 
   const rememberChanges = ref<boolean>(true);
@@ -270,22 +225,20 @@
     };
   });
 
-  const confirmationToReload = ref<boolean>(false);
-
-  const toggleConfirmationToReload = () => {
-    confirmationToReload.value = !confirmationToReload.value;
-  };
-
   const applyChanges = () => {
-    if (!hasDataChanged.value) {
+    if (!haveDataChanged.value) {
       emit('close');
 
       return;
     }
+
     appConfig.ui.primary = primaryColor.value;
     appConfig.ui.gray = secondaryColor.value;
-    colorMode.value = selectedTheme.value;
-    colorMode.preference = selectedTheme.value;
+
+    if (colorModeChanged.value) {
+      colorMode.value = selectedTheme.value;
+      colorMode.preference = selectedTheme.value;
+    }
 
     if (rememberChanges.value) {
       const settings = JSON.stringify(appSettings.value);
@@ -293,18 +246,6 @@
     }
 
     emit('close');
-  };
-
-  const reload = () => {
-    applyChanges();
-
-    location.reload();
-  };
-
-  const done = () => {
-    confirmationToReload.value = false;
-
-    applyChanges();
   };
 
   onMounted(() => {

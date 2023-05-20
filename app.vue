@@ -14,9 +14,6 @@
       const appSettings = localStorage.getItem('appSettings');
       if (!!appSettings) {
         const settings = JSON.parse(appSettings);
-
-        colorMode.value = settings?.colorMode;
-        colorMode.preference = settings?.colorMode;
         appConfig.ui.primary = settings.color?.primary || 'green';
         appConfig.ui.gray = settings.color?.secondary || 'cool';
       }
@@ -37,7 +34,7 @@
    * TODO::
    *
    * // 1. Check if there is a changes have been made before saving the new settings
-   * 2. fix 'nuxt-color-mode' in the local storage
+   * // 2. fix 'nuxt-color-mode' in the local storage
    * 3. add shortcut to toggle the settings modal
    */
 </script>
