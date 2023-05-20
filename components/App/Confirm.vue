@@ -2,7 +2,10 @@
   <div>
     <div v-if="defaultSlotExists" class="flex flex-col p-3 sm:p-5">
       <div>
-        <h3 class="initial:mb-2 initial:text-lg initial:font-semibold" :class="labelClass">
+        <h3
+          class="initial:mb-2 initial:text-xl initial:font-headline initial:font-semibold"
+          :class="labelClass"
+        >
           {{ label }}
         </h3>
         <!-- content -->

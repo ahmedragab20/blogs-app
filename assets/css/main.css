@@ -1,0 +1,18 @@
+*::selection {
+  @apply text-gray-800 dark:text-gray-600 bg-primary-400;
+}
+
+html,
+body {
+  @apply dark:bg-gray-900 bg-gray-50 font-body;
+}
+
+.headline-preset {
+  @apply text-gray-800 dark:text-gray-300 font-headline;
+}
+.text-preset {
+  @apply text-gray-600 font-body;
+}
+.border-base-color {
+  @apply border-gray-200 dark:border-gray-600;
+}

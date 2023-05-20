@@ -12,7 +12,7 @@
     <!-- Logo -->
     <div class="w-[70%] flex justify-center items-center py-1">
       <NuxtLink to="/" class="text-2xl font-headline">
-        <span class="text-primary-600">AR</span>
+        <span class="text-primary-500">AR</span>
         <span class="text-gray-800 dark:text-gray-300">Blogs</span>
       </NuxtLink>
     </div>

@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  css: ['~/assets/css/animation.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/animation.css'],
   modules: [
     '@nuxt/devtools',
     'nuxt-directus',

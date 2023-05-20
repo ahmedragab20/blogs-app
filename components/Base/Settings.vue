@@ -20,7 +20,7 @@
               class="min-w-[90px] cursor-pointer duration-300 hover:scale-105 max-w-[90px] max-h-[180px] m-1 rounded-md shadow-sm"
               :class="
                 primaryColor === color
-                  ? `ring ring-${color}-600 dark:ring-${color}-500`
+                  ? `ring ring-${color}-500 dark:ring-${color}-600`
                   : `ring ring-transparent`
               "
               @click="selectPrimaryColor(color)"
