@@ -14,8 +14,7 @@
   </div>
 </template>
 <script setup lang="ts">
-  const user = await getCurrentUser();
-  console.log({ user });
+  // const user = await getCurrentUser();
 
   const links = computed(() => {
     const global = [
