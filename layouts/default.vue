@@ -1,6 +1,6 @@
 <template>
   <!-- The Wrapper of the pages -->
-  <div class="transition-all ease-linear duration-700">
+  <div>
     <!-- header -->
     <div class="fixed top-0 w-full left-0">
       <BaseHeader :menu-toggler="toggleLinksSection" />
