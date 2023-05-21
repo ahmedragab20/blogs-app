@@ -15,7 +15,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      baseURL: process.env.BASE_URL,
+      baseURL: process.env.VITE_BASE_URL,
     },
   },
   googleFonts: {
@@ -27,7 +27,7 @@ export default defineNuxtConfig({
   vuefire: {
     auth: true,
     admin: {
-      serviceAccount: import.meta.env.ADMIN_URL,
+      serviceAccount: import.meta.env.VITE_ADMIN_URL,
     },
 
     appCheck: {
