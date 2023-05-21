@@ -31,7 +31,6 @@
       <BaseLinks />
     </div>
   </div>
-
   <!-- settings modal -->
   <UModal v-model="settingsModal" name="settingsModal">
     <BaseSettings @close="onSettingsClose" />

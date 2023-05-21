@@ -25,11 +25,10 @@ export default defineNuxtConfig({
     },
   },
   vuefire: {
-    // TODO:: uncomment this when you start using firebase
     auth: true,
-    // admin: {
-    //   serviceAccount: './admin.json',
-    // },
+    admin: {
+      serviceAccount: import.meta.env.ADMIN_URL,
+    },
 
     appCheck: {
       debug: process.env.NODE_ENV !== 'production',
