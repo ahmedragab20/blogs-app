@@ -138,7 +138,7 @@
               v-model="rememberChanges"
               icon-on="i-heroicons-check-20-solid"
               icon-off="i-heroicons-x-mark-20-solid"
-            />x
+            />
           </div>
         </div>
       </div>
@@ -199,6 +199,25 @@
     return (colors as any)?.[color][colorMode.value === 'dark' ? 400 : 500];
   };
 
+  const getColorScheme = () => {
+    const w: any = window;
+
+    // @ts-ignore
+    function prefersColorScheme(suffix) {
+      return w.matchMedia('(prefers-color-scheme' + suffix + ')');
+    }
+    if (w.matchMedia && prefersColorScheme('').media !== 'not all') {
+      // @ts-ignore
+      for (const colorScheme of knownColorSchemes) {
+        if (prefersColorScheme(':' + colorScheme).matches) {
+          return colorScheme;
+        }
+      }
+    }
+
+    //?? the function inspired by the source code detecting system them function the color-mode repo on github, you can look it up: https://github.com/nuxt-modules/color-mode/blob/master/src/script.ts#L61
+  };
+
   const selectedTheme = ref<string>('system'); // fallback to system
 
   const isModeBtnActive = (mode: string) => {
@@ -214,7 +233,11 @@
   const colorModeChanged = computed<boolean>(() => {
     const de = document.documentElement;
     const deThemeClass = de.className;
-    return selectedTheme.value !== colorMode.preference || deThemeClass !== colorMode.preference;
+
+    const colorScheme = getColorScheme();
+    const currentTheme = selectedTheme.value === 'system' ? colorScheme : selectedTheme.value;
+
+    return currentTheme !== deThemeClass;
   });
 
   const haveDataChanged = computed<boolean>(() => {
@@ -239,7 +262,6 @@
 
   const updateThemeLocally = () => {
     // that helps when we don't wanna remember the changes
-    const w: any = window;
     const de = document.documentElement;
 
     if (selectedTheme.value !== 'system') {
@@ -248,20 +270,9 @@
       return;
     }
 
-    // @ts-ignore
-    function prefersColorScheme(suffix) {
-      return w.matchMedia('(prefers-color-scheme' + suffix + ')');
-    }
-    if (w.matchMedia && prefersColorScheme('').media !== 'not all') {
-      // @ts-ignore
-      for (const colorScheme of knownColorSchemes) {
-        if (prefersColorScheme(':' + colorScheme).matches) {
-          de.className = colorScheme;
-        }
-      }
-    }
+    const colorScheme = getColorScheme();
 
-    //?? you can look up the original function to detect the color scheme in the source code from here: https://github.com/nuxt-modules/color-mode/blob/master/src/script.ts#L61
+    de.className = colorScheme ? colorScheme : 'light';
   };
 
   const applyChanges = () => {
@@ -283,6 +294,7 @@
         colorMode.preference = selectedTheme.value;
       }
     }
+
     updateThemeLocally();
     emit('close', true);
   };

@@ -1,7 +1,7 @@
 <template>
   <div class="flex justify-between w-full min-h-[8vh] backdrop-blur-md">
     <!-- switcher -->
-    <div class="w-[15%] min-h-full flex justify-center items-center px-1 py-1 sm:px-">
+    <div class="w-[15%] min-h-full flex justify-center items-center px-1 py-1 sm:px-1">
       <UTooltip class="hidden md:flex" text="app settings" :shortcuts="[metaSymbol, '.']">
         <UButton
           @click="settingsToggler"
@@ -10,6 +10,14 @@
           :ui="presetButton"
         />
       </UTooltip>
+      <div class="flex md:hidden">
+        <UButton
+          @click="settingsToggler"
+          icon="i-heroicons-wrench"
+          variant="soft"
+          :ui="presetButton"
+        />
+      </div>
     </div>
     <!-- Logo -->
     <div class="w-[70%] flex justify-center items-center py-1">
