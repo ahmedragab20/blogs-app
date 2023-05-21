@@ -1,19 +1,12 @@
 <template>
-  <div class="bg-stone-950 dark:bg-slate-100">
-    <div class="w-full sm:w-[70%] mx-auto flex flex-wrap justify-center">
-      <NuxtLink
-        v-for="link in links"
-        :key="link.id"
-        :to="link.path"
-        active-class="shadow-md shadow-slate-500"
-        class="w-1/2 sm:w-1/4 text-white dark:text-stone-950 border border-slate-100 dark:border-stone-950 flex justify-center items-center p-3 sm:p-5 select-none"
-      >
-        {{ link.name }}
-      </NuxtLink>
-    </div>
+  <div>
+    <UDropdown :items="items" :popper="{ placement: 'bottom-start' }">
+      <UButton color="white" label="" trailing-icon="i-heroicons-chevron-down-20-solid" />
+    </UDropdown>
   </div>
 </template>
 <script setup lang="ts">
+  const toast = useToast();
   // const user = await getCurrentUser();
 
   const links = computed(() => {
@@ -44,4 +37,37 @@
 
     return true ? [...global, ...personal] : global;
   });
+
+  const items = [
+    [
+      {
+        label: 'Profile',
+        avatar: {
+          src: 'https://avatars.githubusercontent.com/u/739984?v=4',
+        },
+        shortcuts: ['P'],
+      },
+    ],
+    [
+      {
+        label: 'Edit',
+        icon: 'i-heroicons-pencil-square-20-solid',
+        shortcuts: ['E'],
+      },
+      {
+        label: 'Duplicate',
+        icon: 'i-heroicons-document-duplicate-20-solid',
+        shortcuts: ['D'],
+      },
+    ],
+    [
+      {
+        label: 'Logout',
+        icon: 'i-heroicons-archive-box-20-solid',
+        click: () => {
+          toast.add({ title: "we'll log you out don't cry!!" });
+        },
+      },
+    ],
+  ];
 </script>

@@ -27,7 +27,9 @@
       </NuxtLink>
     </div>
     <!-- menu -->
-    <div class="w-[15%] flex justify-center items-center min-h-full py-1 px-1 sm:px-4">=</div>
+    <div class="w-[15%] flex justify-center items-center min-h-full py-1 px-1 sm:px-4">
+      <BaseLinks />
+    </div>
   </div>
 
   <!-- settings modal -->
