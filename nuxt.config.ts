@@ -31,20 +31,23 @@ export default defineNuxtConfig({
     },
 
     appCheck: {
-      debug: process.env.NODE_ENV !== 'production',
+      debug: false,
       isTokenAutoRefreshEnabled: true,
       provider: 'ReCaptchaV3',
-      key: 'AIzaSyDYZwMiELbHI7Z_rDQC-SsXWEAv5KCGuTA',
+      key: import.meta.env.VITE_FIREBASE_API_KEY,
     },
 
     config: {
-      apiKey: 'AIzaSyDYZwMiELbHI7Z_rDQC-SsXWEAv5KCGuTA',
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
       authDomain: 'auth-79e70.firebaseapp.com',
-      projectId: 'auth-79e70',
-      storageBucket: 'auth-79e70.appspot.com',
-      messagingSenderId: '1067954839109',
-      appId: '1:1067954839109:web:f3319baa7bf3ad538a0d2c',
-      measurementId: 'G-6CNT03649G',
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+      appId: import.meta.env.VITE_FIREBASE_APP_ID,
+      measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
     },
+  },
+  pinia: {
+    autoImports: ['defineStore', ['defineStore', 'definePiniaStore']],
   },
 });
