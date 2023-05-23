@@ -15,8 +15,8 @@
   </div>
 </template>
 <script setup lang="ts">
-  import { AuthLand } from '@/types';
   import { useGeneralStore } from '~/stores/general';
+  type AuthLand = 'login' | 'register' | 'forgot' | 'reset' | 'verify'; //TODO:: search why it fails to be imported if you added it in types/index.ts
 
   const generalStore = useGeneralStore();
   const layout = 'default';
