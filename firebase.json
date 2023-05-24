@@ -4,7 +4,7 @@
     {
       "site": "ar--blogs",
       "public": ".output/public",
-      "cleanUrls": true,
+      "cleanUrls": false,
       "rewrites": [{ "source": "**", "function": "server" }]
     }
   ]
