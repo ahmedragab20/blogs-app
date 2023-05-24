@@ -13,6 +13,9 @@
     "@nuxthq/ui": "^2.0.4",
     "@nuxtjs/google-fonts": "^3.0.1",
     "@types/node": "^18",
+    "firebase-admin": "^11.8.0",
+    "firebase-functions": "^4.4.0",
+    "firebase-functions-test": "^3.1.0",
     "nuxt": "^3.5.0",
     "nuxt-directus": "^5.3.0"
   },
@@ -20,7 +23,6 @@
     "@firebase/app-types": "^0.9.0",
     "@pinia/nuxt": "^0.4.11",
     "firebase": "^9.22.0",
-    "firebase-admin": "^11.8.0",
     "nuxt-vuefire": "^0.1.6",
     "tailwindcss": "^3.3.2",
     "vuefire": "^3.1.0"
