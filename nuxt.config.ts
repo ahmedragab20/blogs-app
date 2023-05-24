@@ -35,12 +35,12 @@ export default defineNuxtConfig({
       serviceAccount: import.meta.env.VITE_ADMIN_URL,
     },
 
-    appCheck: {
-      debug: false,
-      isTokenAutoRefreshEnabled: true,
-      provider: 'ReCaptchaV3',
-      key: import.meta.env.VITE_FIREBASE_API_KEY,
-    },
+    // appCheck: {
+    //   debug: false,
+    //   isTokenAutoRefreshEnabled: true,
+    //   provider: 'ReCaptchaV3',
+    //   key: import.meta.env.VITE_FIREBASE_API_KEY,
+    // },
 
     config: {
       apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
