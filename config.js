@@ -1,6 +1,6 @@
 const config = {
   VITE_BASE_URL: 'http://localhost:8055/items',
-  VITE_ADMIN_URL: './admin.json',
+  VITE_ADMIN_URL: require('./admin.json'),
   VITE_FIREBASE_API_KEY: 'AIzaSyAfkwvywwcSGdRKdTPpReQNmm4MuLLIlFo',
   VITE_FIREBASE_APP_ID: '1:406039281990:web:bd7f0bd9278f6afdb56547',
   VITE_FIREBASE_PROJECT_ID: 'ar--blogs',
