@@ -33,7 +33,7 @@ export default defineNuxtConfig({
   vuefire: {
     auth: true,
     admin: {
-      serviceAccount: import.meta.env.VITE_ADMIN_URL,
+      serviceAccount: config.VITE_ADMIN_URL,
     },
 
     // appCheck: {
