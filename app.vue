@@ -46,13 +46,13 @@
   onMounted(() => {
     initTheme();
 
-    loaded.value = true; // ui is loaded!
-
     // if AuthBanner is shown, take the height of it add add it as bottom padding to the body
     const authBanner = document.querySelector('.auth-banner');
     if (authBanner) {
       const authBannerHeight = authBanner.clientHeight;
       document.body.style.paddingBottom = `${authBannerHeight}px`;
     }
+
+    loaded.value = true; // ui is loaded!
   });
 </script>

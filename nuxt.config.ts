@@ -1,5 +1,6 @@
 export default defineNuxtConfig({
   css: ['~/assets/css/main.css', '~/assets/css/animation.css'],
+
   modules: [
     '@nuxt/devtools',
     'nuxt-directus',
@@ -8,22 +9,26 @@ export default defineNuxtConfig({
     '@nuxtjs/google-fonts',
     '@nuxthq/ui',
   ],
+
   directus: {
     url: 'http://localhost:8055/items',
     autoFetch: true,
     devtools: true,
   },
+
   runtimeConfig: {
     public: {
       baseURL: process.env.VITE_BASE_URL,
     },
   },
+
   googleFonts: {
     families: {
       'Headland One': true,
       Poppins: true,
     },
   },
+
   vuefire: {
     auth: true,
     admin: {
@@ -47,7 +52,10 @@ export default defineNuxtConfig({
       measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
     },
   },
+
   pinia: {
     autoImports: ['defineStore', ['defineStore', 'definePiniaStore']],
   },
+
+  devtools: true
 });
