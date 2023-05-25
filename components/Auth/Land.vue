@@ -7,7 +7,7 @@
 
     <!-- content -->
     <div>
-      <component :is="landComponent" />
+      <component :is="landComponent" @done="loginSuccess" />
     </div>
   </UCard>
 </template>
@@ -17,6 +17,7 @@
   const { target = 'login' } = defineProps<{
     target?: AuthLand;
   }>();
+  const toast = useToast();
 
   const landTitle = computed(() => {
     switch (target) {
@@ -51,4 +52,18 @@
         return resolveComponent('<div></div>');
     }
   });
+
+  const loginSuccess = (done: boolean) => {
+    if (done) {
+      toast.add({
+        title: 'Login Success',
+        description: 'You have successfully logged in!',
+        type: 'success',
+      });
+    }
+  };
+
+  /**
+   * TODO:: add shortcuts to toggle the [login/register]
+   */
 </script>

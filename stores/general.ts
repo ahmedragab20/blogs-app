@@ -17,20 +17,8 @@ export const useGeneralStore = defineStore('general', () => {
     activeLayout.value = layout;
   };
 
-  const authLanded = ref<boolean>(false);
-  const toggleAuthLanded = (payload?: boolean) => {
-    if (payload && [true, false].includes(payload)) {
-      authLanded.value = payload;
-      return;
-    }
-
-    authLanded.value = !authLanded.value;
-  };
-
   return {
     activeLayout,
     setActiveLayout,
-    authLanded,
-    toggleAuthLanded,
   };
 });

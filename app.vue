@@ -8,7 +8,7 @@
     <!-- Toasts -->
     <UNotifications />
     <!-- Auth Land -->
-    <UModal v-model="generalStore.authLanded">
+    <UModal v-model="authStore.authLanded">
       <AuthLand :target="chosenAuthLand" />
     </UModal>
     <!-- Auth Banner -->
@@ -16,20 +16,21 @@
   </div>
 </template>
 <script setup lang="ts">
+  import { useAuthStore } from '~/stores/auth';
   import { useGeneralStore } from '~/stores/general';
   type AuthLand = 'login' | 'register' | 'forgot' | 'reset' | 'verify'; //TODO:: search why it fails to be imported if you added it in types/index.ts
 
   const generalStore = useGeneralStore();
+  const authStore = useAuthStore();
   const layout = computed(() => generalStore.activeLayout);
   const appConfig = useAppConfig();
   const appSettings = ref();
   const loaded = ref(false);
-  const chosenAuthLand = ref<AuthLand>('login'); // fallback to login
-  const chooseAuthLand = (land: AuthLand): void => {
-    if (!land) return;
-
-    chosenAuthLand.value = land;
-    generalStore.toggleAuthLanded(true);
+  const chosenAuthLand = computed<AuthLand>(() => authStore.chosenAuthLand); // fallback to login
+  const setAuthLand = (land: AuthLand): void => authStore.chooseAuthLand(land);
+  const chooseAuthLand = (land: AuthLand) => {
+    setAuthLand(land);
+    authStore.toggleAuthLanded(true);
   };
 
   const initTheme = () => {
