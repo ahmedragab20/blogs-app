@@ -19,7 +19,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      baseURL: process.env.VITE_BASE_URL,
+      baseURL: process.env.BASE_URL,
     },
   },
 
@@ -33,24 +33,24 @@ export default defineNuxtConfig({
   vuefire: {
     auth: true,
     admin: {
-      serviceAccount: config.VITE_ADMIN_URL,
+      serviceAccount: import.meta.env.ADMIN_URL,
     },
 
-    // appCheck: {
+    // appCheck: { //TODO:: Enable this later
     //   debug: false,
     //   isTokenAutoRefreshEnabled: true,
-    //   provider: 'ReCaptchaV3',
-    //   key: import.meta.env.VITE_FIREBASE_API_KEY,
+    //   provider: 'ReCaptchaEnterprise',
+    //   key: config.FIREBASE_API_KEY,
     // },
 
     config: {
-      apiKey: config.VITE_FIREBASE_API_KEY,
-      authDomain: config.VITE_FIREBASE_AUTH_DOMAIN,
-      projectId: config.VITE_FIREBASE_PROJECT_ID,
-      storageBucket: config.VITE_FIREBASE_STORAGE_BUCKET,
-      messagingSenderId: config.VITE_FIREBASE_MESSAGING_SENDER_ID,
-      appId: config.VITE_FIREBASE_APP_ID,
-      measurementId: config.VITE_FIREBASE_MEASUREMENT_ID,
+      apiKey: config.FIREBASE_API_KEY,
+      authDomain: config.FIREBASE_AUTH_DOMAIN,
+      projectId: config.FIREBASE_PROJECT_ID,
+      storageBucket: config.FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: config.FIREBASE_MESSAGING_SENDER_ID,
+      appId: config.FIREBASE_APP_ID,
+      measurementId: config.FIREBASE_MEASUREMENT_ID,
     },
   },
 
