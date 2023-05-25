@@ -11,3 +11,9 @@ export const validatePassword = (password: string): boolean => {
 
   //TEST:: 12345678aA@
 };
+
+// url validation
+export const validateUrl = (url: string): boolean => {
+  const re = /^(ftp|http|https):\/\/[^ "]+$/;
+  return re.test(url);
+};

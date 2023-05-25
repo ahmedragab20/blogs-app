@@ -44,6 +44,9 @@
           src: userPic.value,
         },
         shortcuts: ['P'],
+        click: () => {
+          goToProfile();
+        },
       },
     ],
     [
@@ -71,7 +74,7 @@
   };
 
   const goToProfile = () => {
-    alert('go to profile');
+    router.push('/profile');
   };
 
   const logoutUser = async () => {
