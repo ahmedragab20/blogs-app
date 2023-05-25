@@ -2,7 +2,7 @@
   <div class="flex justify-between w-full min-h-[8vh] backdrop-blur-md">
     <!-- switcher -->
     <div class="w-[15%] min-h-full flex justify-center items-center px-1 py-1 sm:px-1">
-      <UTooltip class="hidden md:flex" text="app settings" :shortcuts="[metaSymbol, '.']">
+      <UTooltip class="hidden sm:flex" text="app settings" :shortcuts="[metaSymbol, '.']">
         <UButton
           @click="settingsToggler"
           icon="i-heroicons-wrench"
@@ -10,7 +10,7 @@
           :ui="presetButton"
         />
       </UTooltip>
-      <div class="flex md:hidden">
+      <div class="flex sm:hidden">
         <UButton
           @click="settingsToggler"
           icon="i-heroicons-wrench"
@@ -28,7 +28,23 @@
     </div>
     <!-- menu -->
     <div class="w-[15%] flex justify-center items-center min-h-full py-1 px-1 sm:px-4">
-      <BaseLinks />
+      <template v-if="!!user">
+        <BaseLinks />
+      </template>
+      <template v-else>
+        <div>
+          <UTooltip class="hidden sm:flex" text="Login" :shortcuts="['l']">
+            <UButton @click="openLoginDialog" icon="i-heroicons-lock-closed" variant="soft">
+              LOGIN
+            </UButton>
+          </UTooltip>
+          <div class="flex sm:hidden">
+            <UButton @click="openLoginDialog" icon="i-heroicons-lock-closed" variant="soft">
+              LOGIN
+            </UButton>
+          </div>
+        </div>
+      </template>
     </div>
   </div>
   <!-- settings modal -->
@@ -37,13 +53,12 @@
   </UModal>
 </template>
 <script setup lang="ts">
-  const { metaSymbol, usingInput } = useShortcuts();
+  import { useAuthStore } from '~/stores/auth';
+  const authStore = useAuthStore();
 
-  const props = defineProps<{
-    menuToggler: () => void;
-  }>();
-
+  const { metaSymbol } = useShortcuts();
   const toast = useToast();
+  const user = useCurrentUser();
 
   const presetButton = {
     rounded: 'rounded-full',
@@ -61,10 +76,23 @@
     if (haveDataChanged) toast.add({ title: `your settings have been saved correctly` });
   };
 
+  const openLoginDialog = (): void => {
+    authStore.chooseAuthLand('login');
+    authStore.toggleAuthLanded(true);
+    console.log('openLoginDialog');
+  };
+
   defineShortcuts({
     'meta_.': {
-      usingInput: true,
+      usingInput: false,
       handler: () => settingsToggler(),
+    },
+  });
+
+  defineShortcuts({
+    l: {
+      usingInput: false,
+      handler: () => openLoginDialog(),
     },
   });
 </script>

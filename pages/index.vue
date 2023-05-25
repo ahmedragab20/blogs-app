@@ -1,6 +1,8 @@
 <template>
   <div class="flex items-center justify-center min-h-screen">
     <UContainer class="mt-4">
+      <UBadge>{{ user?.email || '' }}</UBadge>
+
       <div class="text-3xl headline-preset first-letter:text-4xl">Here's a headline goes on!</div>
       <div class="text-preset">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim veritatis assumenda cumque,
@@ -27,5 +29,5 @@
 </template>
 
 <script setup lang="ts">
-  //
+  const user = useCurrentUser();
 </script>

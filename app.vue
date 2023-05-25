@@ -8,18 +8,20 @@
     <!-- Toasts -->
     <UNotifications />
     <!-- Auth Land -->
-    <UModal v-model="authStore.authLanded">
-      <AuthLand :target="chosenAuthLand" />
-    </UModal>
-    <!-- Auth Banner -->
-    <AuthBanner @select-type="chooseAuthLand" />
+    <template v-if="!user">
+      <UModal v-model="authStore.authLanded">
+        <AuthLand :target="chosenAuthLand" />
+      </UModal>
+      <!-- Auth Banner -->
+      <AuthBanner @select-type="chooseAuthLand" />
+    </template>
   </div>
 </template>
 <script setup lang="ts">
   import { useAuthStore } from '~/stores/auth';
   import { useGeneralStore } from '~/stores/general';
   type AuthLand = 'login' | 'register' | 'forgot' | 'reset' | 'verify'; //TODO:: search why it fails to be imported if you added it in types/index.ts
-
+  const user = useCurrentUser();
   const generalStore = useGeneralStore();
   const authStore = useAuthStore();
   const layout = computed(() => generalStore.activeLayout);
