@@ -99,8 +99,4 @@
       handler: () => goToProfile(),
     },
   });
-
-  onMounted(() => {
-    console.log(user);
-  });
 </script>

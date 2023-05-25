@@ -14,7 +14,14 @@
         </UButton>
       </div>
       <div class="mt-2">
-        <UButton icon="i-heroicons-trash" variant="ghost" color="red"> Delete Account </UButton>
+        <UButton
+          @click="confirmDeletionDialog = true"
+          icon="i-heroicons-trash"
+          variant="ghost"
+          color="red"
+        >
+          Delete Account
+        </UButton>
       </div>
     </div>
   </div>
@@ -86,14 +93,61 @@
       </div>
     </UCard>
   </UModal>
+
+  <!-- delete account dialog -->
+  <UModal v-model="confirmDeletionDialog">
+    <AppConfirm
+      :submit="confirmDeleteUser"
+      :cancel="
+        () => {
+          confirmDeletionDialog = false;
+        }
+      "
+      submit-label="Delete Account"
+      submit-color="red"
+      submit-variant="solid"
+      cancel-color="red"
+      cancel-variant="soft"
+      :loading="deletingUser"
+      :disabled="deleteConfirmationInput !== user?.email"
+    >
+      <div>
+        <strong class="my-2 text-gray-400">This will delete your Account completely</strong>
+        <UInputGroup label="" :help="`to continue type: ${user?.email}`">
+          <UInput
+            v-model="deleteConfirmationInput"
+            name="deleteConfirmationInput"
+            placeholder="Type your email here"
+            icon="i-heroicons-shield-check"
+          />
+        </UInputGroup>
+        <!-- errors -->
+        <div>
+          <UBadge
+            v-if="deleteConfirmationInput?.length && deleteConfirmationInput !== user?.email"
+            color="red"
+            variant="solid"
+            class="mt-2"
+          >
+            Email does not match
+          </UBadge>
+          <UBadge v-if="errorMsg?.length" color="red" variant="solid" class="mt-1">
+            {{ errorMsg?.replaceAll('_', ' ') }}
+          </UBadge>
+        </div>
+      </div>
+    </AppConfirm>
+  </UModal>
 </template>
 <script setup lang="ts">
-  import { User, getAuth, updateProfile } from 'firebase/auth';
+  import { User, deleteUser, getAuth, updateProfile } from 'firebase/auth';
+  import { useGeneralStore } from '~/stores/general';
 
   definePageMeta({
     middleware: ['auth'],
   });
-
+  const router = useRouter();
+  const generalStore = useGeneralStore();
   const toast = useToast();
   const auth = getAuth();
   const user = useCurrentUser();
@@ -111,18 +165,7 @@
     displayName: '',
   });
 
-  const avatars = ref<string[]>([
-    'https://cdn3d.iconscout.com/3d/premium/thumb/boy-avatar-6299533-5187865.png',
-    'https://cdn3d.iconscout.com/3d/premium/thumb/student-5796558-4841557.png',
-    'https://cdn3d.iconscout.com/3d/premium/thumb/man-avatar-6299539-5187871.png',
-    'https://cdn3d.iconscout.com/3d/premium/thumb/black-man-4975947-4159833.png',
-    'https://cdn3d.iconscout.com/3d/premium/thumb/woman-avatar-6299541-5187873.png',
-    'https://cdn3d.iconscout.com/3d/premium/thumb/metal-girl-5681512-4729304.png',
-    'https://cdn3d.iconscout.com/3d/premium/thumb/female-waiter-avatar-6299543-5187875.png',
-    'https://cdn3d.iconscout.com/3d/premium/thumb/cadar-hijab-girl-5681511-4729303.png',
-    'https://cdn3d.iconscout.com/3d/premium/thumb/hijab-girl-5681506-4729298.png',
-    'https://cdn3d.iconscout.com/3d/premium/thumb/muslim-female-5229582-4385798.png',
-  ]);
+  const avatars = computed<string[]>(() => generalStore.avatars);
 
   // select avatar
   const selectAvatar = (avatar: string) => {
@@ -165,6 +208,35 @@
       })
       .finally(() => {
         updatingProfile.value = false;
+      });
+  };
+
+  // delete account
+  const confirmDeletionDialog = ref(false);
+  const deletingUser = ref(false);
+  const deleteConfirmationInput = ref<string>();
+  const errorMsg = ref<string>();
+
+  const confirmDeleteUser = async () => {
+    deletingUser.value = false;
+    await deleteUser(auth.currentUser as User)
+      .then(async () => {
+        // User deleted.
+        await auth.signOut();
+        router.push('/');
+        toast.add({ title: 'Logged out successfully' });
+        confirmDeletionDialog.value = false;
+      })
+      .catch((error) => {
+        // An error ocurred
+        errorMsg.value = error.message;
+        throw createError({
+          message: error.message,
+          statusCode: 500,
+        });
+      })
+      .finally(() => {
+        deletingUser.value = false;
       });
   };
 

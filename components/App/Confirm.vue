@@ -25,6 +25,7 @@
             :icon="submitIcon"
             :label="submitLabel"
             :color="submitColor"
+            :disabled="disabled"
             @click="submit"
           />
           <UButton
@@ -65,6 +66,7 @@
       btnUI?: Partial<UI>;
       submitColor?: string;
       cancelColor?: string;
+      disabled?: boolean;
     }>(),
     {
       label: 'confirming with you!',

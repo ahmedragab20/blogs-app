@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-between w-full min-h-[8vh] backdrop-blur-md">
+  <div class="flex justify-between w-full min-h-[8vh] backdrop-blur-md px-1 sm:px-0">
     <!-- switcher -->
-    <div class="w-[15%] min-h-full flex justify-center items-center px-1 py-1 sm:px-1">
+    <div class="sm:w-[15%] min-h-full flex justify-center items-center px-1 py-1 sm:px-1">
       <UTooltip class="hidden sm:flex" text="app settings" :shortcuts="[metaSymbol, '.']">
         <UButton
           @click="settingsToggler"
@@ -20,14 +20,14 @@
       </div>
     </div>
     <!-- Logo -->
-    <div class="w-[70%] flex justify-center items-center py-1">
+    <div class="sm:w-[70%] flex justify-center items-center py-1">
       <NuxtLink to="/" class="text-2xl font-headline">
         <span class="text-primary-500">AR</span>
         <span class="text-gray-800 dark:text-gray-300">Blogs</span>
       </NuxtLink>
     </div>
     <!-- menu -->
-    <div class="w-[15%] flex justify-center items-center min-h-full py-1 px-1 sm:px-4">
+    <div class="sm:w-[15%] flex justify-center items-center min-h-full py-1 px-1 sm:px-4">
       <template v-if="!!user">
         <BaseLinks />
       </template>

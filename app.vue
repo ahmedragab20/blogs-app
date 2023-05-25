@@ -62,6 +62,7 @@
   /**
    * TODOs [globally]]:
    * TODO:: add ZOD to the app
+   * TODO:: table for the shortcuts
    * TODO:: add gsap + scrolltrigger + animation.css
    */
 </script>
