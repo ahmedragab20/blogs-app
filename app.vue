@@ -55,4 +55,10 @@
       document.body.style.paddingBottom = `${authBannerHeight}px`;
     }
   });
+
+  /**
+   * TODOs [globally]]:
+   * TODO:: add ZOD to the app
+   * TODO:: add gsap + scrolltrigger + animation.css
+   */
 </script>
