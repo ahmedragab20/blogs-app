@@ -21,9 +21,10 @@
                 rounded: 'rounded-full',
               }
             "
-            :variant="variant"
+            :variant="submitVariant"
             :icon="submitIcon"
             :label="submitLabel"
+            :color="submitColor"
             @click="submit"
           />
           <UButton
@@ -34,7 +35,8 @@
             "
             :icon="cancelIcon"
             :label="cancelLabel"
-            :variant="variant"
+            :variant="cancelVariant"
+            :color="cancelColor"
             @click="cancel"
           />
         </div>
@@ -58,8 +60,11 @@
       cancelIcon?: string;
       submitLabel?: string;
       cancelLabel?: string;
-      variant?: string;
+      submitVariant?: string;
+      cancelVariant?: string;
       btnUI?: Partial<UI>;
+      submitColor?: string;
+      cancelColor?: string;
     }>(),
     {
       label: 'confirming with you!',
@@ -67,7 +72,8 @@
       cancelLabel: 'Cancel',
       submitIcon: '',
       cancelIcon: '',
-      variant: 'soft',
+      submitVariant: 'soft',
+      cancelVariant: 'soft',
     }
   );
 

@@ -90,7 +90,7 @@
   });
 
   defineShortcuts({
-    l: {
+    L: {
       usingInput: false,
       handler: () => openLoginDialog(),
     },
