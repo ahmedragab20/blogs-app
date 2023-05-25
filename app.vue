@@ -1,10 +1,6 @@
 <template>
   <div id="ragab-app">
-    <div class="flex justify-center">
-      <div class="mt-20 bg-primary-100 text-primary-500 p-1 shadow-sm rounded-md">
-        {{ authDomain }}
-      </div>
-    </div>
+    <!-- 🚧 - App Layouts -->
     <NuxtLayout v-if="loaded" :name="layout"></NuxtLayout>
 
     <!-- 🤷🏻‍♂️ - so global -->
@@ -23,10 +19,8 @@
   import { useGeneralStore } from '~/stores/general';
   type AuthLand = 'login' | 'register' | 'forgot' | 'reset' | 'verify'; //TODO:: search why it fails to be imported if you added it in types/index.ts
 
-  const authDomain = computed(() => import.meta.env.VITE_FIREBASE_AUTH_DOMAIN);
-
   const generalStore = useGeneralStore();
-  const layout = 'default';
+  const layout = computed(() => generalStore.activeLayout);
   const appConfig = useAppConfig();
   const appSettings = ref();
   const loaded = ref(false);
