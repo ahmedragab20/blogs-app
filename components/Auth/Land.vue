@@ -41,13 +41,14 @@
       case 'login':
         return resolveComponent('AuthLogin');
       case 'register':
-        return resolveComponent('AuthRegister');
-      case 'forgot':
-        return resolveComponent('AuthForgot');
-      case 'reset':
-        return resolveComponent('AuthReset');
-      case 'verify':
-        return resolveComponent('AuthVerify');
+        return resolveComponent('AuthRegistration');
+      // TODO:: add the rest of the auth components
+      // case 'forgot':
+      //   return resolveComponent('AuthForgot');
+      // case 'reset':
+      //   return resolveComponent('AuthReset');
+      // case 'verify':
+      //   return resolveComponent('AuthVerify');
       default:
         return resolveComponent('<div></div>');
     }

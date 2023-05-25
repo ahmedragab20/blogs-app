@@ -22,6 +22,11 @@
         <p class="my-2">Are you sure you want to logout?</p>
       </AppConfirm>
     </UModal>
+
+    <!-- About Developer Dialog -->
+    <UModal v-model="aboutDeveloperDialog">
+      <About />
+    </UModal>
   </div>
 </template>
 <script setup lang="ts">
@@ -53,6 +58,10 @@
       {
         label: 'About the developer',
         icon: 'i-heroicons-question-mark-circle',
+        shortcuts: ['I'],
+        click: () => {
+          toggleAboutDeveloperDialog();
+        },
       },
     ],
     [
@@ -93,10 +102,22 @@
       });
   };
 
+  const aboutDeveloperDialog = ref(false);
+  const toggleAboutDeveloperDialog = () => {
+    aboutDeveloperDialog.value = !aboutDeveloperDialog.value;
+  };
+
+  // shortcuts
   defineShortcuts({
     P: {
       usingInput: false,
       handler: () => goToProfile(),
+    },
+  });
+  defineShortcuts({
+    I: {
+      usingInput: false,
+      handler: () => toggleAboutDeveloperDialog(),
     },
   });
 </script>

@@ -132,7 +132,7 @@
             Email does not match
           </UBadge>
           <UBadge v-if="errorMsg?.length" color="red" variant="solid" class="mt-1">
-            {{ errorMsg?.replaceAll('_', ' ') }}
+            {{ errorMsg }}
           </UBadge>
         </div>
       </div>
