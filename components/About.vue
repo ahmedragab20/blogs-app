@@ -2,7 +2,7 @@
   <UCard>
     <template #header>
       <div>
-        <h3 class="font-headline">This the guy!!</h3>
+        <h3 class="font-headline">This is the guy!!</h3>
       </div>
     </template>
     <div class="flex flex-col items-center justify-center">
