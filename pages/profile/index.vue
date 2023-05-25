@@ -153,7 +153,10 @@
   const user = useCurrentUser();
   const newPic = ref(''); // new profile picture to solve having to reload the page to see the new profile picture issue
   const userPic = computed(
-    () => newPic.value || user.value?.photoURL || import.meta.env.VITE_PLACEHOLDER_AVATAR
+    () =>
+      newPic.value ||
+      user.value?.photoURL ||
+      'https://cdn3d.iconscout.com/3d/premium/thumb/boy-avatar-6299533-5187865.png'
   );
   const updateProfileDialog = ref(false);
   const toggleUpdateProfileDialog = (state: boolean) => {

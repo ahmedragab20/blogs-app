@@ -38,7 +38,11 @@
 
   const user = useCurrentUser();
 
-  const userPic = computed(() => user.value?.photoURL || import.meta.env.VITE_PLACEHOLDER_AVATAR);
+  const userPic = computed(
+    () =>
+      user.value?.photoURL ||
+      'https://cdn3d.iconscout.com/3d/premium/thumb/boy-avatar-6299533-5187865.png'
+  );
   const confirmLogoutModal = ref(false);
 
   const links = [
