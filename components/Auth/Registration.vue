@@ -72,20 +72,12 @@
 </template>
 <script setup lang="ts">
   import { User, createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
-  import { addDoc, collection } from 'firebase/firestore';
   import { useFirestore } from 'vuefire';
-
   const auth = getAuth();
 
   const addUserToUsersCollection = async (user: User) => {
     const db = useFirestore();
-    const newUser = await addDoc(collection(db, 'users'), {
-      uid: user.uid,
-      email: user.email,
-      displayName: user.displayName,
-      emailVerified: user.emailVerified,
-      photoURL: user.photoURL,
-    });
+    const newUser = await addFirestoreUser(db, user);
   };
 
   const formValid = computed<boolean>(() => {

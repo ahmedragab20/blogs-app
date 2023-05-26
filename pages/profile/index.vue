@@ -199,6 +199,12 @@
       photoURL,
     })
       .then(async () => {
+        const db = useFirestore();
+        await updateFirestoreUser(db, {
+          uid: auth.currentUser?.uid as string,
+          displayName,
+          photoURL,
+        });
         newPic.value = photoURL;
         toast.add({ title: 'Profile updated successfully' });
         toggleUpdateProfileDialog(false);
@@ -222,9 +228,12 @@
 
   const confirmDeleteUser = async () => {
     deletingUser.value = false;
+    const db = useFirestore();
+    await deleteFirestoreUser(db, {
+      uid: auth.currentUser?.uid as string,
+    });
     await deleteUser(auth.currentUser as User)
       .then(async () => {
-        // User deleted.
         await auth.signOut();
         router.push('/');
         toast.add({ title: 'Logged out successfully' });
