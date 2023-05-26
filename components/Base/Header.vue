@@ -79,7 +79,6 @@
   const openLoginDialog = (): void => {
     authStore.chooseAuthLand('login');
     authStore.toggleAuthLanded(true);
-    console.log('openLoginDialog');
   };
 
   defineShortcuts({

@@ -262,5 +262,4 @@
   //TODO:: add external avatar or select one
   //TODO:: add verification email cycle
   //TODO:: add password reset cycle
-  //TODO:: add delete account cycle
 </script>
