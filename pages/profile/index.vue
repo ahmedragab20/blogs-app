@@ -231,21 +231,23 @@
     const db = useFirestore();
     await deleteFirestoreUser(db, {
       uid: auth.currentUser?.uid as string,
-    });
-    await deleteUser(auth.currentUser as User)
+    })
       .then(async () => {
-        await auth.signOut();
-        router.push('/');
-        toast.add({ title: 'Logged out successfully' });
-        confirmDeletionDialog.value = false;
-      })
-      .catch((error) => {
-        // An error ocurred
-        errorMsg.value = error.message;
-        throw createError({
-          message: error.message,
-          statusCode: 500,
-        });
+        await deleteUser(auth.currentUser as User)
+          .then(async () => {
+            await auth.signOut();
+            router.push('/');
+            toast.add({ title: 'Logged out successfully' });
+            confirmDeletionDialog.value = false;
+          })
+          .catch((error) => {
+            // An error ocurred
+            errorMsg.value = error.message;
+            throw createError({
+              message: error.message,
+              statusCode: 500,
+            });
+          });
       })
       .finally(() => {
         deletingUser.value = false;
