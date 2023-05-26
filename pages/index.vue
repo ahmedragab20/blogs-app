@@ -3,9 +3,12 @@
     <UContainer>
       <!-- Add blog -->
       <div>
-        <BlogsAddNew />
+        <BlogsAddNew @click="Debug.log({})" />
       </div>
     </UContainer>
+    <!--
+      TODO:: Add helper to manage the guest user actions
+     -->
   </div>
 </template>
 
