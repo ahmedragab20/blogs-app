@@ -110,7 +110,6 @@
         });
       })
       .catch((error) => {
-        // failed to login
         errorMsg.value = error.message;
       })
       .finally(() => {

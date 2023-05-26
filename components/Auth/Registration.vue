@@ -35,7 +35,6 @@
               <UButton
                 :icon="showPassword ? 'i-heroicons-eye' : 'i-heroicons-eye-slash'"
                 variant="ghost"
-                color="white"
                 class="hover:bg-transparent hover:dark:bg-transparent"
               />
             </div>
@@ -72,8 +71,22 @@
   </div>
 </template>
 <script setup lang="ts">
-  import { createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+  import { User, createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
+  import { addDoc, collection } from 'firebase/firestore';
+  import { useFirestore } from 'vuefire';
+
   const auth = getAuth();
+
+  const addUserToUsersCollection = async (user: User) => {
+    const db = useFirestore();
+    const newUser = await addDoc(collection(db, 'users'), {
+      uid: user.uid,
+      email: user.email,
+      displayName: user.displayName,
+      emailVerified: user.emailVerified,
+      photoURL: user.photoURL,
+    });
+  };
 
   const formValid = computed<boolean>(() => {
     return !validateEmail?.(form.value.email) || !validatePassword?.(form.value.password);
@@ -91,18 +104,12 @@
     const { email, password } = form.value;
 
     await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) => {
+      .then(async (userCredential) => {
         const user = userCredential.user;
-        console.log(user);
+        await addUserToUsersCollection(user);
       })
       .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        errorMsg.value = errorMessage;
-        console.log({
-          errorCode,
-          errorMessage,
-        });
+        errorMsg.value = error.message;
       })
       .finally(() => {
         loading.value = false;

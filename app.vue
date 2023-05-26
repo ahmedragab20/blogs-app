@@ -1,7 +1,7 @@
 <template>
-  <div id="ragab-app">
+  <div v-if="loaded" id="ragab-app">
     <!-- 🚧 - App Layouts -->
-    <NuxtLayout v-if="loaded" :name="layout"></NuxtLayout>
+    <NuxtLayout :name="layout"></NuxtLayout>
 
     <!-- 🤷🏻‍♂️ - so global -->
 
@@ -15,6 +15,17 @@
       <!-- Auth Banner -->
       <AuthBanner @select-type="chooseAuthLand" />
     </template>
+  </div>
+  <div v-else class="flex justify-center items-center flex-col h-screen gap-4">
+    <div v-for="n in 4" :key="n">
+      <div class="flex items-center space-x-4">
+        <USkeleton class="h-12 w-12 rounded-full" />
+        <div class="space-y-2">
+          <USkeleton class="h-4 w-[250px]" />
+          <USkeleton class="h-4 w-[200px]" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -47,9 +58,8 @@
     }
   };
 
-  onMounted(() => {
+  onMounted(async () => {
     initTheme();
-    loaded.value = true; // ui is loaded!
 
     // if AuthBanner is shown, take the height of it add add it as bottom padding to the body
     const authBanner = document.querySelector('.auth-banner');
@@ -57,6 +67,10 @@
       const authBannerHeight = authBanner.clientHeight;
       document.body.style.paddingBottom = `${authBannerHeight}px`;
     }
+
+    const getUser = await getCurrentUser().finally(() => {
+      loaded.value = true;
+    });
   });
 
   /**
