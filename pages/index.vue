@@ -3,7 +3,7 @@
     <UContainer>
       <!-- Add blog -->
       <div>
-        <BlogsAddNew @click="Debug.log({})" />
+        <BlogsAddNew @click="clickHandler(addBlog)" />
       </div>
     </UContainer>
     <!--
@@ -13,19 +13,9 @@
 </template>
 
 <script setup lang="ts">
-  // onMounted(() => {
-  //   Debug.error({
-  //     message: 'Hello world',
-  //     data: {
-  //       name: 'John Doe',
-  //       age: 20,
-  //       address: {
-  //         street: '123 Main St',
-  //         city: 'New York',
-  //         state: 'NY',
-  //         zip: '10001',
-  //       },
-  //     },
-  //   });
-  // });
+  const addBlog = () => {
+    Debug.log({ message: 'Add new blog', source: 'index.vue' });
+  };
+
+  const { clickHandler } = useGuest();
 </script>

@@ -2,6 +2,7 @@ interface Payload {
   message: string;
   style?: string;
   data?: any;
+  source?: string;
 }
 
 export default class Debug {
@@ -9,7 +10,7 @@ export default class Debug {
     if (process.env.NODE_ENV !== 'development') return;
 
     console.log(
-      `%c${payload.message || '🎉'}`,
+      `%c${payload.message || '🎉'} ${payload.source ? `(${payload.source})` : ''}`,
       `${
         payload.style ||
         'padding: 2px; font-weight: bold; color: brown; border-radius: 2px; background-color: #f5f5f5;'
@@ -21,7 +22,7 @@ export default class Debug {
     if (process.env.NODE_ENV !== 'development') return;
 
     console.warn(
-      `%c${payload.message || '🚧'}`,
+      `%c${payload.message || '🚧'} ${payload.source ? `(${payload.source})` : ''}`,
       `${
         payload.style ||
         'padding: 2px; font-weight: bold; color: #000; border-radius: 2px; background-color: #ded3afa5;'
@@ -33,7 +34,7 @@ export default class Debug {
     if (process.env.NODE_ENV !== 'development') return;
 
     console.error(
-      `%c${payload.message || '🚨'}`,
+      `%c${payload.message || '🚨'} ${payload.source ? `(${payload.source})` : ''}`,
       `${
         payload.style ||
         'padding: 2px; font-weight: bold; color: #fff; border-radius: 2px; background-color: #f44336;'

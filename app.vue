@@ -40,9 +40,8 @@
   const appSettings = ref();
   const loaded = ref(false);
   const chosenAuthLand = computed<AuthLand>(() => authStore.chosenAuthLand); // fallback to login
-  const setAuthLand = (land: AuthLand): void => authStore.chooseAuthLand(land);
   const chooseAuthLand = (land: AuthLand) => {
-    setAuthLand(land);
+    authStore.chooseAuthLand(land);
     authStore.toggleAuthLanded(true);
   };
 
