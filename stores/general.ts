@@ -1,4 +1,11 @@
+import { Tag } from '~/types';
+
 export const useGeneralStore = defineStore('general', () => {
+  const blogTags = ref<Tag[]>([]);
+  const setBlogTags = (tags: Tag[]) => {
+    blogTags.value = tags;
+  };
+
   const activeLayout = ref<string>('default');
 
   const setActiveLayout = (layout: string) => {
@@ -29,6 +36,8 @@ export const useGeneralStore = defineStore('general', () => {
   ]);
 
   return {
+    blogTags,
+    setBlogTags,
     activeLayout,
     setActiveLayout,
     avatars,
