@@ -6,9 +6,6 @@
         <BlogsAddNew @click="clickHandler(addBlog)" />
       </div>
     </UContainer>
-    <!--
-      TODO:: Add helper to manage the guest user actions
-     -->
   </div>
 </template>
 
