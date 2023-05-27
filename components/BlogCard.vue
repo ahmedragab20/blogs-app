@@ -8,7 +8,11 @@
           class="flex items-center space-x-2 cursor-pointer"
         >
           <div>
-            <UAvatar class="select-none" :src="userBlogPicture" :alt="blog.user?.displayName" />
+            <UAvatar
+              class="select-none pointer-events-none"
+              :src="userBlogPicture"
+              :alt="blog.user?.displayName"
+            />
           </div>
           <div>
             <div class="text-sm font-semibold text-primary-500 font-headline">
