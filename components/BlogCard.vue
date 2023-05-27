@@ -42,10 +42,19 @@
     <template v-if="Generics.valuesMatch(user?.uid, blog?.user?.uid)" #footer>
       <div class="flex justify-end space-x-2">
         <div>
-          <UButton icon="i-heroicons-pencil" variant="soft"> Update </UButton>
+          <UButton @click="BlogHandler.update()" icon="i-heroicons-pencil" variant="soft">
+            Update
+          </UButton>
         </div>
         <div>
-          <UButton icon="i-heroicons-trash" variant="ghost" color="red"> Delete </UButton>
+          <UButton
+            @click="BlogHandler.delete()"
+            icon="i-heroicons-trash"
+            variant="ghost"
+            color="red"
+          >
+            Delete
+          </UButton>
         </div>
       </div>
     </template>

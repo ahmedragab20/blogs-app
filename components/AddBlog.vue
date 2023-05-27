@@ -130,7 +130,12 @@
         Debug.warn({ message: '⚠️ failed to add the new blog!', source: 'index.vue' });
       }
     } catch (error) {
-      Debug.error({ message: '🚨 Error adding document', source: 'index.vue', data: error });
+      Debug.error({
+        message: '🚨 Error adding document',
+        source: 'index.vue',
+        data: error,
+        useOnProduction: true,
+      });
     } finally {
       addingBlog.value = false;
     }
