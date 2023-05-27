@@ -31,6 +31,7 @@ export interface Blog {
   updatedAt: Date;
   tags: Tag[];
   reactions: Reaction[];
+  user?: FirestoreUser;
   // attachments: string[]; TODO:: investigate adding it later
 }
 

@@ -31,7 +31,7 @@
     <UCard>
       <template #header>
         <div>
-          <h1 class="font-bold font-headline">Update Profile</h1>
+          <h3 class="font-bold font-headline">Update Profile</h3>
         </div>
       </template>
       <div>
@@ -91,6 +91,13 @@
           </div>
         </div>
       </div>
+      <template #footer>
+        <UBadge color="yellow">
+          when you change your profile, it will
+          <strong class="mx-1 text-yellow-900 dark:text-yellow-100"> NOT </strong> be updated in
+          your old blogs.
+        </UBadge>
+      </template>
     </UCard>
   </UModal>
 

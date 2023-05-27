@@ -21,4 +21,8 @@ export class Generics {
 
     return sections.join('-');
   }
+
+  static valuesMatch<T>(a: T, b: T): boolean {
+    return JSON.stringify(a) === JSON.stringify(b);
+  }
 }

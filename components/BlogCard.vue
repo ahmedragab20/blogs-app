@@ -1,0 +1,53 @@
+<template>
+  <UCard>
+    <template #header>
+      <!-- user -->
+      <div class="flex items-center space-x-2">
+        <div>
+          <UAvatar class="select-none" :src="blog.user?.photoURL" :alt="blog.user?.displayName" />
+        </div>
+        <div>
+          <div class="text-sm font-semibold text-primary-500 font-headline">
+            {{ blog.user?.displayName }}
+          </div>
+          <div class="text-xs text-gray-500">{{ blog.user?.email }}</div>
+        </div>
+      </div>
+    </template>
+    <div>
+      <div class="text-xl sm:text-2xl font-bold text-primary-500 font-headline truncate">
+        {{ blog.title }}
+      </div>
+      <div class="text-sm text-gray-500">{{ blog.subtitle }}</div>
+    </div>
+    <div class="mt-4 relative">
+      <div class="text-sm text-gray-500">{{ blog.content }}</div>
+    </div>
+    <div class="mt-4">
+      <div class="flex flex-wrap space-x-2">
+        <div v-for="(tag, i) in blog.tags" :key="i">
+          <UBadge>{{ tag.name }}</UBadge>
+        </div>
+      </div>
+    </div>
+    <template v-if="Generics.valuesMatch(user?.uid, blog?.user?.uid)" #footer>
+      <div class="flex justify-end space-x-2">
+        <div>
+          <UButton icon="i-heroicons-pencil" variant="soft"> Update </UButton>
+        </div>
+        <div>
+          <UButton icon="i-heroicons-trash" variant="ghost" color="red"> Delete </UButton>
+        </div>
+      </div>
+    </template>
+  </UCard>
+</template>
+<script setup lang="ts">
+  import { Blog } from '~/types';
+
+  const props = defineProps<{
+    blog: Partial<Blog>;
+  }>();
+
+  const user = useCurrentUser();
+</script>
