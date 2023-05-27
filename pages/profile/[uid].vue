@@ -113,7 +113,7 @@
         <UBadge color="yellow" class="w-full">
           <strong>
             NOTE: <br />
-            when you change your profile, it will - NOT - be updated in your old blogs.
+            when you update your profile, it will - NOT - be updated in your old blogs.
           </strong>
         </UBadge>
       </template>

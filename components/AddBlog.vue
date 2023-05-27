@@ -97,6 +97,7 @@
     addingBlog.value = true;
     try {
       const data = {
+        id: Generics.uuid(),
         title: blog.value.title,
         content: blog.value.content,
         subtitle: blog.value.subtitle,
