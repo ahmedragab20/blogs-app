@@ -3,11 +3,12 @@ interface Payload {
   style?: string;
   data?: any;
   source?: string;
+  useOnProduction?: boolean;
 }
 
 export default class Debug {
   static log(payload: Partial<Payload>) {
-    if (process.env.NODE_ENV !== 'development') return;
+    if (process.env.NODE_ENV !== 'development' && !payload.useOnProduction) return;
 
     console.log(
       `%c${payload.message || '🎉'} ${payload.source ? `(${payload.source})` : ''}`,
@@ -19,7 +20,7 @@ export default class Debug {
     );
   }
   static warn(payload: Partial<Payload>) {
-    if (process.env.NODE_ENV !== 'development') return;
+    if (process.env.NODE_ENV !== 'development' && !payload.useOnProduction) return;
 
     console.warn(
       `%c${payload.message || '🚧'} ${payload.source ? `(${payload.source})` : ''}`,
@@ -31,7 +32,7 @@ export default class Debug {
     );
   }
   static error(payload: Partial<Payload>) {
-    if (process.env.NODE_ENV !== 'development') return;
+    if (process.env.NODE_ENV !== 'development' && !payload.useOnProduction) return;
 
     console.error(
       `%c${payload.message || '🚨'} ${payload.source ? `(${payload.source})` : ''}`,

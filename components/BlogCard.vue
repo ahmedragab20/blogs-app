@@ -1,16 +1,25 @@
 <template>
-  <UCard>
+  <UCard v-if="!!blog">
     <template #header>
       <!-- user -->
-      <div class="flex items-center space-x-2">
-        <div>
-          <UAvatar class="select-none" :src="blog.user?.photoURL" :alt="blog.user?.displayName" />
-        </div>
-        <div>
-          <div class="text-sm font-semibold text-primary-500 font-headline">
-            {{ blog.user?.displayName }}
+      <div class="flex">
+        <div
+          @click="goToProfile(blog?.user?.uid!)"
+          class="flex items-center space-x-2 cursor-pointer"
+        >
+          <div>
+            <UAvatar class="select-none" :src="blog.user?.photoURL" :alt="blog.user?.displayName" />
           </div>
-          <div class="text-xs text-gray-500">{{ blog.user?.email }}</div>
+          <div>
+            <div class="text-sm font-semibold text-primary-500 font-headline">
+              {{ blog.user?.displayName }}
+              <!-- if it's me -->
+              <template v-if="Generics.valuesMatch(user?.uid, blog?.user?.uid)">
+                <UBadge size="xs" class="text-xs text-gray-500">you</UBadge>
+              </template>
+            </div>
+            <div class="text-xs text-gray-500">{{ blog.user?.email }}</div>
+          </div>
         </div>
       </div>
     </template>
@@ -48,6 +57,12 @@
   const props = defineProps<{
     blog: Partial<Blog>;
   }>();
-
+  const router = useRouter();
   const user = useCurrentUser();
+
+  const goToProfile = (userUID: string) => {
+    if (!!userUID) {
+      router.push(`/profile/${userUID}`);
+    }
+  };
 </script>

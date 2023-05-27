@@ -1,6 +1,6 @@
 <template>
-  <div class="flex justify-between w-full min-h-[8vh] backdrop-blur-md px-1 sm:px-0">
-    <!-- switcher -->
+  <div class="flex justify-between w-full min-h-[8vh] backdrop-blur-md px-1 sm:px-0 z-[1000]">
+    <!-- settings -->
     <div class="sm:w-[15%] min-h-full flex justify-center items-center px-1 py-1 sm:px-1">
       <UTooltip class="hidden sm:flex" text="app settings" :shortcuts="[metaSymbol, '.']">
         <UButton

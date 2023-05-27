@@ -2,7 +2,7 @@
   <!-- The Wrapper of the pages -->
   <div>
     <!-- header -->
-    <div class="fixed top-0 w-full left-0">
+    <div class="fixed top-0 w-full left-0 z-50">
       <BaseHeader />
     </div>
     <!-- content -->

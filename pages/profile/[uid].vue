@@ -1,31 +1,48 @@
 <template>
   <div class="text-center min-h-[90vh]">
-    <div class="flex flex-col items-center justify-center">
+    <div
+      v-if="(user?.uid && myProfile) || foreignUser?.uid"
+      class="flex flex-col items-center justify-center"
+    >
       <div class="w-32 h-32 rounded-full overflow-hidden shadow-xl">
-        <img :src="userPic" alt="user avatar" class="w-full h-full object-cover" />
+        <img
+          :src="userPic || foreignUser?.photoURL"
+          alt="user avatar"
+          class="w-full h-full object-cover"
+        />
       </div>
-      <h1 class="text-2xl font-bold mt-4">{{ user?.displayName }}</h1>
-      <p class="text-gray-500 text-sm">{{ user?.email }}</p>
+      <h1 class="text-2xl font-bold mt-4">{{ user?.displayName || foreignUser?.displayName }}</h1>
+      <p class="text-gray-500 text-sm">{{ user?.email || foreignUser?.email }}</p>
 
       <!-- update profile -->
-      <div class="mt-4">
-        <UButton @click="toggleUpdateProfileDialog" icon="i-heroicons-pencil" variant="soft">
-          Update Profile
-        </UButton>
-      </div>
-      <div class="mt-2">
-        <UButton
-          @click="confirmDeletionDialog = true"
-          icon="i-heroicons-trash"
-          variant="ghost"
-          color="red"
-        >
-          Delete Account
-        </UButton>
-      </div>
+      <template v-if="myProfile">
+        <div class="mt-4">
+          <UButton @click="toggleUpdateProfileDialog" icon="i-heroicons-pencil" variant="soft">
+            Update Profile
+          </UButton>
+        </div>
+        <div class="mt-2">
+          <UButton
+            @click="confirmDeletionDialog = true"
+            icon="i-heroicons-trash"
+            variant="ghost"
+            color="red"
+          >
+            Delete Account
+          </UButton>
+        </div>
+      </template>
+    </div>
+    <div v-else-if="!loading" class="flex flex-col items-center justify-center min-h-[60vh] gap-5">
+      <UIcon name="i-heroicons-x-circle" class="text-6xl text-red-300 dark:bg-red-500" />
+      <UBadge color="red">The user is no longer exist</UBadge>
+    </div>
+    <div v-else class="flex justify-center items-center">
+      <AppSpinner />
     </div>
   </div>
 
+  <!-- Modals -->
   <!-- update Dialog -->
   <UModal v-model="updateProfileDialog" name="updateProfileDialog">
     <UCard>
@@ -92,10 +109,11 @@
         </div>
       </div>
       <template #footer>
-        <UBadge color="yellow">
-          when you change your profile, it will
-          <strong class="mx-1 text-yellow-900 dark:text-yellow-100"> NOT </strong> be updated in
-          your old blogs.
+        <UBadge color="yellow" class="w-full">
+          <strong>
+            NOTE: <br />
+            when you change your profile, it will - NOT - be updated in your old blogs.
+          </strong>
         </UBadge>
       </template>
     </UCard>
@@ -149,15 +167,22 @@
 <script setup lang="ts">
   import { User, deleteUser, getAuth, updateProfile } from 'firebase/auth';
   import { useGeneralStore } from '~/stores/general';
+  import { FirestoreUser } from '~/types';
 
   definePageMeta({
     middleware: ['auth'],
   });
   const router = useRouter();
+  const route = useRoute();
   const generalStore = useGeneralStore();
   const toast = useToast();
   const auth = getAuth();
+
+  const loading = ref(false);
+  const db = useFirestore();
   const user = useCurrentUser();
+  const myProfile = computed(() => Generics.valuesMatch(user.value?.uid, route.params?.uid));
+  const foreignUser = ref<FirestoreUser>();
   const newPic = ref(''); // new profile picture to solve having to reload the page to see the new profile picture issue
   const userPic = computed(
     () =>
@@ -235,7 +260,6 @@
 
   const confirmDeleteUser = async () => {
     deletingUser.value = false;
-    const db = useFirestore();
     await deleteFirestoreUser(db, {
       uid: auth.currentUser?.uid as string,
     })
@@ -265,7 +289,14 @@
     updateUserForm.value.photoURL = userPic.value || '';
     updateUserForm.value.displayName = user.value?.displayName || '';
   });
-
+  onBeforeMount(async () => {
+    if (!user.value?.uid) {
+      loading.value = true;
+      foreignUser.value = await getFirestoreUser(db, route?.params?.uid as string).finally(() => {
+        loading.value = false;
+      })!;
+    }
+  });
   //TODO:: add external avatar or select one
   //TODO:: add verification email cycle
   //TODO:: add password reset cycle

@@ -27,6 +27,10 @@
     <UModal v-model="aboutDeveloperDialog">
       <About />
     </UModal>
+    <!-- Pro tips modal -->
+    <UModal v-model="proTipsDialog">
+      <ProTips />
+    </UModal>
   </div>
 </template>
 <script setup lang="ts">
@@ -67,6 +71,14 @@
           toggleAboutDeveloperDialog();
         },
       },
+      {
+        label: 'Pro tips',
+        icon: 'i-heroicons-light-bulb',
+        shortcuts: ['/'],
+        click: () => {
+          toggleProTipsDialog();
+        },
+      },
     ],
     [
       {
@@ -87,7 +99,7 @@
   };
 
   const goToProfile = () => {
-    router.push('/profile');
+    router.push(`/profile/${user.value?.uid}`);
   };
 
   const logoutUser = async () => {
@@ -111,6 +123,11 @@
     aboutDeveloperDialog.value = !aboutDeveloperDialog.value;
   };
 
+  const proTipsDialog = ref(false);
+  const toggleProTipsDialog = () => {
+    proTipsDialog.value = !proTipsDialog.value;
+  };
+
   // shortcuts
   defineShortcuts({
     P: {
@@ -122,6 +139,12 @@
     I: {
       usingInput: false,
       handler: () => toggleAboutDeveloperDialog(),
+    },
+  });
+  defineShortcuts({
+    '/': {
+      usingInput: false,
+      handler: () => toggleProTipsDialog(),
     },
   });
 </script>
