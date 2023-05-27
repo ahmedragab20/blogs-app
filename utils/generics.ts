@@ -3,7 +3,6 @@ export class Generics {
     const data = new Uint8Array(16);
     window.crypto.getRandomValues(data);
 
-    // Set the version (4) and variant (2) bits
     data[6] = (data[6] & 0x0f) | 0x40;
     data[8] = (data[8] & 0x3f) | 0x80;
 
