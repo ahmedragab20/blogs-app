@@ -15,7 +15,7 @@
               {{ blog.user?.displayName }}
               <!-- if it's me -->
               <template v-if="Generics.valuesMatch(user?.uid, blog?.user?.uid)">
-                <UBadge size="xs" class="text-xs text-gray-500">you</UBadge>
+                <UBadge size="xs" class="text-xs text-gray-500">me</UBadge>
               </template>
             </div>
             <div class="text-xs text-gray-500">{{ blog.user?.email }}</div>

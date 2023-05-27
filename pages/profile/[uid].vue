@@ -1,18 +1,15 @@
 <template>
   <div class="text-center min-h-[90vh]">
-    <div
-      v-if="(user?.uid && myProfile) || foreignUser?.uid"
-      class="flex flex-col items-center justify-center"
-    >
+    <div v-if="profileUser?.uid" class="flex flex-col items-center justify-center">
       <div class="w-32 h-32 rounded-full overflow-hidden shadow-xl">
         <img
-          :src="userPic || foreignUser?.photoURL"
+          :src="userPic"
           alt="user avatar"
-          class="w-full h-full object-cover"
+          class="w-full h-full object-cover select-none pointer-events-none"
         />
       </div>
-      <h1 class="text-2xl font-bold mt-4">{{ user?.displayName || foreignUser?.displayName }}</h1>
-      <p class="text-gray-500 text-sm">{{ user?.email || foreignUser?.email }}</p>
+      <h1 class="text-2xl font-bold mt-4">{{ profileUser.displayName }}</h1>
+      <p class="text-gray-500 text-sm">{{ profileUser.email }}</p>
 
       <!-- update profile -->
       <template v-if="myProfile">
@@ -78,7 +75,11 @@
                         'shadow-primary-500': isAvatarSelected(avatar),
                       }"
                     >
-                      <img :src="avatar" alt="avatar" class="w-full h-full object-cover" />
+                      <img
+                        :src="avatar"
+                        alt="avatar"
+                        class="w-full h-full object-cover select-none pointer-events-none"
+                      />
                     </div>
                   </template>
                 </div>
@@ -183,11 +184,14 @@
   const user = useCurrentUser();
   const myProfile = computed(() => Generics.valuesMatch(user.value?.uid, route.params?.uid));
   const foreignUser = ref<FirestoreUser>();
+
+  const profileUser = computed(() => (myProfile.value ? user.value : foreignUser.value));
+
   const newPic = ref(''); // new profile picture to solve having to reload the page to see the new profile picture issue
   const userPic = computed(
     () =>
       newPic.value ||
-      user.value?.photoURL ||
+      profileUser.value?.photoURL ||
       'https://cdn3d.iconscout.com/3d/premium/thumb/boy-avatar-6299533-5187865.png'
   );
   const updateProfileDialog = ref(false);
@@ -290,9 +294,9 @@
     updateUserForm.value.displayName = user.value?.displayName || '';
   });
   onBeforeMount(async () => {
-    if (!user.value?.uid) {
+    if (!myProfile.value) {
       loading.value = true;
-      foreignUser.value = await getFirestoreUser(db, route?.params?.uid as string).finally(() => {
+      foreignUser.value = await getFirestoreUser(db, route.params?.uid as string).finally(() => {
         loading.value = false;
       })!;
     }

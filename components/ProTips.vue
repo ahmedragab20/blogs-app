@@ -56,6 +56,17 @@
             <UKbd>I</UKbd>
           </td>
         </tr>
+        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+          <th
+            scope="row"
+            class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+          >
+            login
+          </th>
+          <td class="px-6 py-4">
+            <UKbd>L</UKbd>
+          </td>
+        </tr>
         <tr class="bg-white dark:bg-gray-800 dark:border-gray-700">
           <th
             scope="row"
