@@ -1,9 +1,13 @@
-import { Tag } from '~/types';
+import { BlogReaction, Tag } from '~/types';
 
 export const useGeneralStore = defineStore('general', () => {
   const blogTags = ref<Tag[]>([]);
   const setBlogTags = (tags: Tag[]) => {
     blogTags.value = tags;
+  };
+  const blogReactions = ref<BlogReaction[]>([]);
+  const setBlogReactions = (reactions: BlogReaction[]) => {
+    blogReactions.value = reactions;
   };
 
   const activeLayout = ref<string>('default');
@@ -38,6 +42,8 @@ export const useGeneralStore = defineStore('general', () => {
   return {
     blogTags,
     setBlogTags,
+    blogReactions,
+    setBlogReactions,
     activeLayout,
     setActiveLayout,
     avatars,

@@ -155,15 +155,19 @@
   const appConfig = useAppConfig();
 
   const primaryColorsSorted = computed<string[]>(() => {
-    return appConfig.ui.colors.sort((a: string, b: string) => {
-      if (a === appConfig.ui.primary) {
-        return -1;
-      } else if (b === appConfig.ui.primary) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
+    const blockedColors = ['black', 'white', 'transparent', 'red', 'rose'];
+
+    return appConfig.ui.colors
+      .sort((a: string, b: string) => {
+        if (a === appConfig.ui.primary) {
+          return -1;
+        } else if (b === appConfig.ui.primary) {
+          return 1;
+        } else {
+          return 0;
+        }
+      })
+      ?.filter((color: string) => !blockedColors.includes(color));
   });
   const secondaryColorsSorted = computed<string[]>(() => {
     return appConfig.ui.grayColors.sort((a: string, b: string) => {

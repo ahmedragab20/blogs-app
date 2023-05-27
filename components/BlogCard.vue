@@ -8,11 +8,11 @@
           class="flex items-center space-x-2 cursor-pointer"
         >
           <div>
-            <UAvatar class="select-none" :src="blog.user?.photoURL" :alt="blog.user?.displayName" />
+            <UAvatar class="select-none" :src="userBlogPicture" :alt="blog.user?.displayName" />
           </div>
           <div>
             <div class="text-sm font-semibold text-primary-500 font-headline">
-              {{ blog.user?.displayName }}
+              {{ blog.user?.displayName || 'Unnamed' }}
               <!-- if it's me -->
               <template v-if="Generics.valuesMatch(user?.uid, blog?.user?.uid)">
                 <UBadge size="xs" class="text-xs text-gray-500">me</UBadge>
@@ -54,11 +54,18 @@
 <script setup lang="ts">
   import { Blog } from '~/types';
 
-  const props = defineProps<{
+  const { blog } = defineProps<{
     blog: Partial<Blog>;
   }>();
   const router = useRouter();
   const user = useCurrentUser();
+
+  const userBlogPicture = computed(() => {
+    return (
+      blog.user?.photoURL ??
+      'https://cdn3d.iconscout.com/3d/premium/thumb/boy-avatar-6299533-5187865.png'
+    );
+  });
 
   const goToProfile = (userUID: string) => {
     if (!!userUID) {

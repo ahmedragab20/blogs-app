@@ -11,17 +11,19 @@ export interface FirestoreUser {
   photoURL?: string;
 }
 
-export interface Reaction {
-  id: string;
-  icon: string;
-  user: FirestoreUser;
-}
-
 export interface Tag {
   name: string;
   category: string;
 }
 
+interface Reaction {
+  icon: string;
+  key: string;
+}
+
+interface BlogReaction extends Reaction {
+  users: FirestoreUser[];
+}
 export interface Blog {
   id: string;
   title: string;
@@ -30,7 +32,7 @@ export interface Blog {
   createdAt: Date;
   updatedAt: Date;
   tags: Tag[];
-  reactions: Reaction[];
+  reactions: BlogReaction[];
   user?: FirestoreUser;
   // attachments: string[]; TODO:: investigate adding it later
 }

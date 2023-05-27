@@ -1,11 +1,10 @@
 import { collection } from 'firebase/firestore';
 import { useGeneralStore } from '~/stores/general';
-import { Tag } from '~/types';
 export default defineNuxtPlugin(() => {
   const db = useFirestore();
   const generalStore = useGeneralStore();
 
-  const tagsCollection = useCollection(collection(db, 'tags')).value as Tag[];
+  const tagsCollection = useCollection(collection(db, 'tags'));
 
   Debug.log({
     message: '🎉Tags collection fetched🎉',
@@ -14,5 +13,10 @@ export default defineNuxtPlugin(() => {
     useOnProduction: true,
   });
 
-  generalStore.setBlogTags(tagsCollection);
+  //@ts-ignore
+  generalStore.setBlogTags(tagsCollection.value || tagsCollection);
+
+  const reactionsCollection = useCollection(collection(db, 'reactions'));
+  //@ts-ignore
+  generalStore.setBlogReactions(reactionsCollection.value || tagsCollection);
 });

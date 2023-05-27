@@ -25,14 +25,16 @@
           />
         </div>
         <div>
-          <div>
-            <USelect
-              v-model="blog.tags"
-              name="blog-tags"
-              placeholder="Tag..."
-              text-attribute="name"
-              :options="tags"
-            />
+          <div class="flex gap-1 flex-wrap">
+            <UBadge
+              v-for="(tag, i) in tags"
+              @click="selectTags(tag)"
+              :color="isTagSelected(tag) ? 'primary' : 'red'"
+              :key="i"
+              class="cursor-pointer"
+            >
+              #{{ tag.name }}
+            </UBadge>
           </div>
         </div>
       </div>
@@ -67,12 +69,28 @@
     content: '',
     subtitle: '',
     tags: [], // TODO: fix this [the v-model returns string instead of array]. but that's fine for now cuz we only support one tag per blog
+    reactions: [],
   });
 
   const tags = computed<Tag[]>(() => blogTags);
-
+  const isTagSelected = (tag: Tag) => {
+    return !!blog.value.tags?.find((i) => i.name === tag.name);
+  };
+  const selectTags = (tag: Tag) => {
+    const index = blog.value.tags?.findIndex((i) => i.name === tag.name) as number;
+    if (index !== -1) {
+      blog.value.tags?.splice(index, 1);
+    } else {
+      blog.value.tags?.push(tag);
+    }
+  };
   const addBlogFormValid = computed<boolean>(() => {
-    return !!blog.value.title && !!blog.value.content && !!blog.value.subtitle && !!blog.value.tags;
+    return (
+      !!blog.value.title &&
+      !!blog.value.content &&
+      !!blog.value.subtitle &&
+      !!blog.value.tags?.length
+    );
   });
   const addingBlog = ref(false);
   const addBlog = async () => {
@@ -82,9 +100,8 @@
         title: blog.value.title,
         content: blog.value.content,
         subtitle: blog.value.subtitle,
-        tags: tags.value?.length
-          ? [tags.value?.find((i) => i.name === (blog.value.tags as any))]
-          : [],
+        tags: blog.value.tags,
+        reactions: [],
         user: {
           uid: user.value?.uid,
           displayName: user.value?.displayName,

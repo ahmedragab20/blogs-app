@@ -22,7 +22,7 @@
 </template>
 
 <script setup lang="ts">
-  const {} = defineProps<{
+  const { size } = defineProps<{
     size?: string; // ex: 4, 5, 6, 7 - it will be w-4 h-4, w-5 h-5, etc
   }>();
 </script>
