@@ -13,6 +13,17 @@ import { Blog } from '~/types';
 export default class BlogHandler {
   static async create(blog: Blog) {
     try {
+      if (!blog) {
+        !Generics.getObjectInfoSeparate(blog)?.keys?.length;
+
+        Debug.error({
+          message: `You must provide a blog data to create a blog`,
+          source: 'BlogHandler.ts',
+          data: blog,
+        });
+        return;
+      }
+
       const db: Firestore = useFirestore();
       const user = useCurrentUser();
       const data = {
@@ -37,6 +48,16 @@ export default class BlogHandler {
   }
   static async update(blog: Partial<Blog>) {
     try {
+      if (!blog.blogId) {
+        Debug.error({
+          message: `You must provide a blogId to update a blog`,
+          source: 'BlogHandler.ts',
+          data: blog,
+        });
+
+        return;
+      }
+
       const db: Firestore = useFirestore();
       const querySnapshot = await getDocs(
         query(collection(db, 'blogs'), where('blogId', '==', blog.blogId))
@@ -51,10 +72,30 @@ export default class BlogHandler {
           });
         }
       }
-    } catch (error) {}
+    } catch (error) {
+      Debug.error({
+        message: `Couldn't update blog with id: ${blog.blogId}`,
+        data: error,
+        useOnProduction: true,
+      });
+      throw createError({
+        message: "Couldn't update user",
+        statusCode: 500,
+      });
+    }
   }
   static async delete(blogId: string) {
     try {
+      if (!blogId) {
+        Debug.error({
+          message: `You must provide a blogId to delete a blog`,
+          source: 'BlogHandler.ts',
+          data: blogId,
+        });
+
+        return;
+      }
+
       const db: Firestore = useFirestore();
       const querySnapshot = await getDocs(
         query(collection(db, 'blogs'), where('blogId', '==', blogId))

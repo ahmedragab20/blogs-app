@@ -221,7 +221,7 @@
       }
 
       const updatedBlog: Partial<Blog> = {
-        ...blog,
+        blogId: blog.blogId,
         title: blogTitle.innerText,
         subtitle: blogSubtitle.innerText,
         content: blogContent.innerText,
@@ -229,7 +229,8 @@
       };
 
       await BlogHandler.update(updatedBlog);
-      blogClone.value = JSON.parse(JSON.stringify(blog));
+
+      blogClone.value = JSON.parse(JSON.stringify(updatedBlog));
       toggleUpdateBlogMode();
     } catch (error) {
       console.log(error);
