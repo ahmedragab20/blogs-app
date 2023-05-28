@@ -26,6 +26,7 @@
             :label="submitLabel"
             :color="submitColor"
             :disabled="disabled"
+            :loading="loading"
             @click="submit"
           />
           <UButton
@@ -37,6 +38,7 @@
             :icon="cancelIcon"
             :label="cancelLabel"
             :variant="cancelVariant"
+            :disabled="loading"
             :color="cancelColor"
             @click="cancel"
           />
@@ -55,8 +57,8 @@
     defineProps<{
       label?: string;
       labelClass?: string;
-      submit: () => void;
-      cancel: () => void;
+      submit: (...args: any[]) => any;
+      cancel: (...args: any[]) => any;
       submitIcon?: string;
       cancelIcon?: string;
       submitLabel?: string;
@@ -67,6 +69,7 @@
       submitColor?: string;
       cancelColor?: string;
       disabled?: boolean;
+      loading?: boolean;
     }>(),
     {
       label: 'confirming with you!',

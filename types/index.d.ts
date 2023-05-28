@@ -25,14 +25,14 @@ interface BlogReaction extends Reaction {
   users: FirestoreUser[];
 }
 export interface Blog {
-  id: string;
+  blogId?: string;
   title: string;
   content: string;
   subtitle: string;
   createdAt: Date;
-  updatedAt: Date;
   tags: Tag[];
   reactions: BlogReaction[];
+  updatedAt?: Date;
   user?: FirestoreUser;
   // attachments: string[]; TODO:: investigate adding it later
 }

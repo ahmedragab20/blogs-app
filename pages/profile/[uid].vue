@@ -301,7 +301,6 @@
       })!;
     }
   });
-  //TODO:: add external avatar or select one
   //TODO:: add verification email cycle
   //TODO:: add password reset cycle
 </script>

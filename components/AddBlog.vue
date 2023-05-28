@@ -25,12 +25,15 @@
           />
         </div>
         <div>
+          <!-- TODO:: make it reusable if needed -->
           <div class="flex gap-1 flex-wrap">
             <UBadge
               v-for="(tag, i) in tags"
               @click="selectTags(tag)"
+              @keyup.space="selectTags(tag)"
               :color="isTagSelected(tag) ? 'primary' : 'red'"
               :key="i"
+              tabindex="0"
               class="cursor-pointer"
             >
               #{{ tag.name }}
@@ -49,7 +52,6 @@
   </form>
 </template>
 <script setup lang="ts">
-  import { addDoc, collection } from 'firebase/firestore';
   import { useGeneralStore } from '~/stores/general';
   import { Blog, Tag } from '~/types';
 
@@ -58,18 +60,17 @@
   }>();
 
   const { blogTags } = useGeneralStore();
-  const user = useCurrentUser();
   const toast = useToast();
   const { clickHandler } = useGuest();
-  const db = useFirestore();
 
-  const blog = ref<Partial<Blog>>({
-    id: '',
+  const blog = ref<Blog>({
     title: '',
     content: '',
     subtitle: '',
-    tags: [], // TODO: fix this [the v-model returns string instead of array]. but that's fine for now cuz we only support one tag per blog
+    tags: [],
     reactions: [],
+    createdAt: new Date(),
+    updatedAt: new Date(),
   });
 
   const tags = computed<Tag[]>(() => blogTags);
@@ -96,22 +97,7 @@
   const addBlog = async () => {
     addingBlog.value = true;
     try {
-      const data = {
-        id: Generics.uuid(),
-        title: blog.value.title,
-        content: blog.value.content,
-        subtitle: blog.value.subtitle,
-        tags: blog.value.tags,
-        reactions: [],
-        user: {
-          uid: user.value?.uid,
-          displayName: user.value?.displayName,
-          email: user.value?.email,
-          photoURL: user.value?.photoURL,
-        },
-      };
-
-      const newDoc = await addDoc(collection(db, 'blogs'), data);
+      const newDoc = await BlogHandler.create(blog.value);
 
       if (!!newDoc) {
         toast.add({
@@ -121,11 +107,14 @@
         });
         props.toggleAddBlogDialog?.();
         blog.value = {
-          id: '',
+          blogId: '',
           title: '',
           content: '',
           subtitle: '',
           tags: [],
+          reactions: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
         };
       } else {
         Debug.warn({ message: '⚠️ failed to add the new blog!', source: 'index.vue' });

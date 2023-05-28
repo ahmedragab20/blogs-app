@@ -3,7 +3,6 @@ import { useGeneralStore } from '~/stores/general';
 export default defineNuxtPlugin(() => {
   const db = useFirestore();
   const generalStore = useGeneralStore();
-
   const tagsCollection = useCollection(collection(db, 'tags'));
 
   Debug.log({
