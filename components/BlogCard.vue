@@ -105,30 +105,39 @@
         </div>
       </div>
       <div v-else>
-        <div class="flex justify-end space-x-2">
-          <div>
-            <UButton
-              @click="discardBlogChanges"
-              icon="i-heroicons-backspace"
-              variant="ghost"
-              color="red"
-            >
-              Discard
-            </UButton>
+        <div class="flex space-x-2" :class="!!updateBlogError ? 'justify-between' : 'justify-end'">
+          <div v-if="!!updateBlogError" class="flex items-center">
+            <UBadge color="red">
+              {{ updateBlogError }}
+            </UBadge>
           </div>
-          <div>
-            <UButton icon="i-heroicons-check" variant="soft" :disabled="!blogUpdatedValuesValid">
-              Save
-            </UButton>
+
+          <div class="flex items-center gap-2">
+            <div>
+              <UButton
+                @click="discardBlogChanges"
+                icon="i-heroicons-backspace"
+                variant="ghost"
+                color="red"
+              >
+                Discard
+              </UButton>
+            </div>
+            <div>
+              <UButton
+                icon="i-heroicons-check"
+                variant="soft"
+                :loading="updatingBlog"
+                @click="updateBlog"
+              >
+                Save
+              </UButton>
+            </div>
           </div>
         </div>
       </div>
     </template>
   </UCard>
-
-  <pre>
-    {{ blogUpdatedValuesValid }}
-  </pre>
 
   <!-- delete blog modal -->
   <UModal v-model="deleteBlogModal">
@@ -192,29 +201,54 @@
     }
   };
 
-  const blogUpdatedValuesValid = computed(() => {
-    const blogTitle = document.getElementById('blog-title') as HTMLElement;
-    const blogSubtitle = document.getElementById('blog-subtitle') as HTMLElement;
-    const blogContent = document.getElementById('blog-content') as HTMLElement;
+  const updateBlogError = ref<string>();
+  const updatingBlog = ref(false);
+  const updateBlog = async () => {
+    try {
+      updatingBlog.value = true;
+      const blogTitle = document.getElementById('blog-title') as HTMLElement;
+      const blogSubtitle = document.getElementById('blog-subtitle') as HTMLElement;
+      const blogContent = document.getElementById('blog-content') as HTMLElement;
 
-    return Generics.allDataValid({
-      title: blogTitle?.innerText,
-      subtitle: blogSubtitle?.innerText,
-      content: blogContent?.innerText,
-      tags: updatedTags?.value,
-    });
-  });
+      if (
+        !blogTitle?.innerHTML?.length ||
+        !blogSubtitle?.innerHTML?.length ||
+        !blogContent?.innerHTML?.length ||
+        !updatedTags.value.length
+      ) {
+        updateBlogError.value = 'You must fill in all of the required data';
+        return;
+      }
+
+      const updatedBlog: Partial<Blog> = {
+        ...blog,
+        title: blogTitle.innerText,
+        subtitle: blogSubtitle.innerText,
+        content: blogContent.innerText,
+        tags: updatedTags.value,
+      };
+
+      await BlogHandler.update(updatedBlog);
+      blogClone.value = JSON.parse(JSON.stringify(blog));
+      toggleUpdateBlogMode();
+    } catch (error) {
+      console.log(error);
+    } finally {
+      updatingBlog.value = false;
+    }
+  };
 
   const discardBlogChanges = () => {
     const blogTitle = document.getElementById('blog-title') as HTMLElement;
     const blogSubtitle = document.getElementById('blog-subtitle') as HTMLElement;
     const blogContent = document.getElementById('blog-content') as HTMLElement;
 
-    blogTitle.innerText = blog.title ?? '';
-    blogSubtitle.innerText = blog.subtitle ?? '';
-    blogContent.innerText = blog.content ?? '';
+    blogTitle.innerText = blogClone.value?.title ?? '';
+    blogSubtitle.innerText = blogClone.value?.subtitle ?? '';
+    blogContent.innerText = blogClone.value?.content ?? '';
 
     updatedTags.value = blogClone.value?.tags ?? [];
+    updateBlogError.value = '';
 
     toggleUpdateBlogMode();
   };
@@ -236,7 +270,6 @@
       deletingBlog.value = false;
     }
   };
-
   onMounted(() => {
     blogClone.value = JSON.parse(JSON.stringify(blog));
     updatedTags.value = blogClone.value?.tags ?? [];
