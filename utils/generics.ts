@@ -141,7 +141,10 @@ export class Generics {
       if (result.length > 0) {
         result += ', ';
       }
-      result += minutes === 1 ? '1 minute' : `${minutes} minutes`;
+      result +=
+        minutes === 1
+          ? '1 minute'
+          : `${(minutes % 60)?.toFixed(0) !== '0' ? `${(minutes % 60)?.toFixed(0)} minutes` : ''}`;
     }
 
     // Return the resulting string
