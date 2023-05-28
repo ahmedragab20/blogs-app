@@ -8,7 +8,7 @@
     <div class="text-center">
       <h2 class="text-2xl font-bold text-primary-500 font-headline">Add new blog</h2>
       <p class="text-base-color text-preset">Add new blog to your blog list</p>
-      <div class="mt-4">
+      <div class="mt-4 hidden md:block">
         <small class="flex items-center justify-center gap-1 text-preset">
           Press
           <kbd class="px-1 text-xs text-white bg-primary-500 rounded">N</kbd> to add new blog
