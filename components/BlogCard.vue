@@ -214,7 +214,7 @@
         !blogTitle?.innerHTML?.length ||
         !blogSubtitle?.innerHTML?.length ||
         !blogContent?.innerHTML?.length ||
-        !updatedTags.value.length
+        !updatedTags.value?.length
       ) {
         updateBlogError.value = 'You must fill in all of the required data';
         return;
