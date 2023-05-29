@@ -106,51 +106,47 @@ export class Generics {
     let result: string = '';
 
     if (years > 0) {
-      result += years === 1 ? '1 year' : `${years} years`;
+      result += `${years}y`;
     }
 
     if (months > 0) {
       if (result.length > 0) {
         result += ', ';
       }
-      result += months === 1 ? '1 month' : `${months} months`;
+      result += `${months}mo`;
     }
 
     if (weeks > 0) {
       if (result.length > 0) {
         result += ', ';
       }
-      result += weeks === 1 ? '1 week' : `${weeks} weeks`;
+      result += `${weeks}w`;
     }
 
     if (days > 0) {
       if (result.length > 0) {
         result += ', ';
       }
-      result += days === 1 ? '1 day' : `${days} days`;
+      result += `${days}d`;
     }
 
     if (hours > 0) {
       if (result.length > 0) {
         result += ', ';
       }
-      result += hours === 1 ? '1 hour' : `${hours} hours`;
+      result += `${hours}h`;
     }
 
     if (minutes > 0) {
       if (result.length > 0) {
         result += ', ';
       }
-      result +=
-        minutes === 1
-          ? '1 minute'
-          : `${(minutes % 60)?.toFixed(0) !== '0' ? `${(minutes % 60)?.toFixed(0)} minutes` : ''}`;
+      result += `${(minutes % 60)?.toFixed(0) !== '0' ? `${(minutes % 60)?.toFixed(0)}m` : ''}`;
     }
 
     // Return the resulting string
     return result.length > 0 ? result + ' ago' : 'just now';
   }
-
   static allDataValid<T>(obj: T): boolean {
     if (!obj || typeof obj !== 'object') {
       Debug.error({
@@ -161,12 +157,6 @@ export class Generics {
 
       return false;
     }
-
-    Debug.log({
-      message: '🚀 Validating values',
-      source: 'utils/generics.ts',
-      data: obj,
-    });
 
     // check if all values are valid
     for (const key in obj) {

@@ -86,32 +86,39 @@
       </div>
     </div>
     <template v-if="Generics.valuesMatch(user?.uid, blog?.user?.uid)" #footer>
-      <div v-if="!updateBlogMode" class="flex justify-end space-x-2">
-        <div>
-          <UButton @click="toggleUpdateBlogMode" icon="i-heroicons-pencil" variant="soft">
-            Update
-          </UButton>
-        </div>
+      <div v-if="!updateBlogMode" class="flex space-x-2 justify-between">
         <div>
           <UButton
-            @click="toggleDeleteBlogModal"
-            icon="i-heroicons-trash"
-            variant="ghost"
-            color="red"
-            :loading="deletingBlog"
+            v-for="(reaction, i) in blogReactions"
+            :key="i"
+            :icon="`i-heroicons-${reaction.icon}`"
+            variant="soft"
           >
-            Delete
+            {{ reaction.key }}
           </UButton>
+        </div>
+        <div class="flex space-x-2">
+          <div>
+            <UButton @click="toggleUpdateBlogMode" icon="i-heroicons-pencil" variant="soft">
+              Update
+            </UButton>
+          </div>
+          <div>
+            <UButton
+              @click="toggleDeleteBlogModal"
+              icon="i-heroicons-trash"
+              variant="ghost"
+              color="red"
+              :loading="deletingBlog"
+            >
+              Delete
+            </UButton>
+          </div>
         </div>
       </div>
       <div v-else>
         <div class="flex space-x-2" :class="!!updateBlogError ? 'justify-between' : 'justify-end'">
-          <div v-if="!!updateBlogError" class="flex items-center">
-            <UBadge color="red">
-              {{ updateBlogError }}
-            </UBadge>
-          </div>
-
+          <div></div>
           <div class="flex items-center gap-2">
             <div>
               <UButton
@@ -159,7 +166,7 @@
   import { useGeneralStore } from '~/stores/general';
   import { Blog, Tag } from '~/types';
 
-  const { blogTags } = useGeneralStore();
+  const { blogTags, blogReactions } = useGeneralStore();
 
   const { blog } = defineProps<{
     blog: Partial<Blog>;
