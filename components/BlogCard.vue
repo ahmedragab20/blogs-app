@@ -85,19 +85,23 @@
         </template>
       </div>
     </div>
-    <template v-if="Generics.valuesMatch(user?.uid, blog?.user?.uid)" #footer>
+    <template #footer>
       <div v-if="!updateBlogMode" class="flex space-x-2 justify-between">
-        <div>
+        <!-- Reactions -->
+        <div class="flex space-x-2">
           <UButton
-            v-for="(reaction, i) in blogReactions"
+            v-for="(reaction, i) in blogReactions?.sort((a, b) => (a.key !== 'like' ? 1 : -1))"
             :key="i"
-            :icon="`i-heroicons-${reaction.icon}`"
-            variant="soft"
+            :icon="reaction.icon"
+            variant="ghost"
+            class="capitalize border-b"
+            @click="Reaction.react(blog, reaction)"
           >
             {{ reaction.key }}
           </UButton>
         </div>
-        <div class="flex space-x-2">
+        <!-- Update Blog -->
+        <div v-if="Generics.valuesMatch(user?.uid, blog?.user?.uid)" class="flex space-x-2">
           <div>
             <UButton @click="toggleUpdateBlogMode" icon="i-heroicons-pencil" variant="soft">
               Update
@@ -116,9 +120,9 @@
           </div>
         </div>
       </div>
+      <!-- no need to add check for the authority cuz the trigger for this will be hidden by default -->
       <div v-else>
-        <div class="flex space-x-2" :class="!!updateBlogError ? 'justify-between' : 'justify-end'">
-          <div></div>
+        <div class="flex space-x-2 justify-end">
           <div class="flex items-center gap-2">
             <div>
               <UButton
@@ -182,7 +186,6 @@
       'https://cdn3d.iconscout.com/3d/premium/thumb/boy-avatar-6299533-5187865.png'
     );
   });
-
   const goToProfile = (userUID: string) => {
     if (!!userUID) {
       router.push(`/profile/${userUID}`);
