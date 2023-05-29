@@ -155,7 +155,7 @@
   const appConfig = useAppConfig();
 
   const primaryColorsSorted = computed<string[]>(() => {
-    const blockedColors = ['black', 'white', 'transparent', 'red', 'rose'];
+    const blockedColors = ['black', 'white', 'transparent', 'red', 'rose', 'primary'];
 
     return appConfig.ui.colors
       .sort((a: string, b: string) => {

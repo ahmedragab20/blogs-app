@@ -8,8 +8,18 @@
           class="w-full h-full object-cover select-none pointer-events-none"
         />
       </div>
-      <h1 class="text-2xl font-bold mt-4">{{ profileUser.displayName }}</h1>
-      <p class="text-gray-500 text-sm">{{ profileUser.email }}</p>
+      <div>
+        <h2 class="text-2xl font-bold mt-4">{{ profileUser.displayName }}</h2>
+        <p class="text-gray-500 text-sm">{{ profileUser.email }}</p>
+      </div>
+
+      <div>
+        <p
+          class="text-gray-500 text-sm my-5 shadow-lg shadow-red-200 border-t-2 border-red-100 py-1 px-2 rounded-lg"
+        >
+          bro! show me my recent blogs!! I'm grumpy now!!😐
+        </p>
+      </div>
 
       <!-- update profile -->
       <template v-if="myProfile">
@@ -173,6 +183,7 @@
   definePageMeta({
     middleware: ['auth'],
   });
+  const apiConfig = useAppConfig();
   const router = useRouter();
   const route = useRoute();
   const generalStore = useGeneralStore();
