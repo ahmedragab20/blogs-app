@@ -10,6 +10,20 @@ export default class Reaction {
   }
 
   static async react(blog: Partial<Blog>, reaction: BlogReaction) {
+    /**
+     * Scenario 1: the user will add reaction to the blog
+     * - if that reaction already exists, add the user to the reaction
+     * - if that reaction does not exist, create a new reaction and add the user to the reaction
+     * - if the user already reacted to the blog, remove the user from the reaction
+     * - if the user is the only one who reacted to the reaction, remove the reaction (after that user reacts)
+     * - if the user was reacting on other reaction, remove the user from the reaction and add the user to the new reaction
+     */
+
+    Debug.log({
+      message: '👍 Reaction button clicked',
+      data: { blog, reaction },
+    });
+
     // prevent spamming
     if (Reaction.buttonSleeping) {
       Debug.log({
@@ -48,19 +62,16 @@ export default class Reaction {
     try {
       const blogClone: Partial<Blog> = JSON.parse(JSON.stringify(blog));
       const currentUser = useCurrentUser();
+      const checkAndUpdateReaction = (oldReaction: Reaction) => {};
       if (!blogClone.reactions) {
         blogClone.reactions = [];
       }
 
-      const haveIReacted = blogClone.reactions?.find(
+      const oldRec = blogClone.reactions?.find(
         (rect) => !!rect.users?.find((user: FirestoreUser) => user.uid === currentUser.value?.uid)
       );
 
-      Debug.log({
-        data: { haveIReacted },
-      });
-
-      if (haveIReacted) {
+      if (oldRec) {
         blogClone.reactions = blogClone.reactions?.map((rect) => {
           if (rect.key === rect.key) {
             rect.users = rect.users?.filter(
@@ -72,6 +83,32 @@ export default class Reaction {
 
         if (!reaction.users?.length) {
           blogClone.reactions = blogClone.reactions?.filter((rect) => rect.key !== reaction.key);
+        }
+
+        if (oldRec.key !== reaction.key) {
+          const usr: FirestoreUser = {
+            uid: currentUser.value?.uid!,
+            displayName: currentUser.value?.displayName!,
+            email: currentUser.value?.email!,
+            photoURL: currentUser.value?.photoURL!,
+          };
+
+          // check if reaction already exists
+          const reactionExist = blogClone.reactions?.find((rect) => rect.key === reaction.key);
+
+          if (reactionExist) {
+            blogClone.reactions = blogClone.reactions?.map((rect) => {
+              if (rect.key === reaction.key) {
+                rect.users = [...rect.users, usr];
+              }
+              return rect;
+            });
+          } else {
+            blogClone.reactions?.push({
+              ...reaction,
+              users: [usr],
+            });
+          }
         }
       } else {
         const usr: FirestoreUser = {

@@ -57,6 +57,12 @@
     }
   };
 
+  const initAppBase = () => {
+    const appBase = useAppBase();
+
+    appBase?.();
+  };
+
   onMounted(async () => {
     initTheme();
 
@@ -70,6 +76,13 @@
     const getUser = await getCurrentUser().finally(() => {
       loaded.value = true;
     });
+  });
+
+  watchEffect(() => {
+    if (!generalStore.blogTags?.length || !generalStore.blogReactions?.length) {
+      //TODO:: investigate more in the root of this issue
+      initAppBase();
+    }
   });
 
   /**

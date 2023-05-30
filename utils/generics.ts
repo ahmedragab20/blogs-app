@@ -106,21 +106,21 @@ export class Generics {
     let result: string = '';
 
     if (years > 0) {
-      result += `${years}y`;
+      result += `${years % 365.25}y`;
     }
 
     if (months > 0) {
       if (result.length > 0) {
         result += ', ';
       }
-      result += `${months}mo`;
+      result += `${months % 12}mo`;
     }
 
     if (weeks > 0) {
       if (result.length > 0) {
         result += ', ';
       }
-      result += `${weeks}w`;
+      result += `${weeks % 7}w`;
     }
 
     if (days > 0) {
@@ -134,7 +134,7 @@ export class Generics {
       if (result.length > 0) {
         result += ', ';
       }
-      result += `${hours}h`;
+      result += `${hours % 24}h`;
     }
 
     if (minutes > 0) {
