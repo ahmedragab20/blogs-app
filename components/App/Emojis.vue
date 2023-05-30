@@ -9,14 +9,16 @@
       class="absolute sm:-bottom-[50px] -bottom-20 sm:left-10 left-0 z-10 sm:scale-100 scale-75"
     >
       <Transition name="slide-fade">
-        <Picker
-          v-if="emojiPickerSelected"
-          :data="emojiIndex"
-          title="How do u c the blog?"
-          emoji="point_up"
-          class="shadow-xl shadow-primary-100 text-primary-500"
-          @select="updateEmoji"
-        />
+        <client-only>
+          <Picker
+            v-if="emojiPickerSelected"
+            :data="emojiIndex"
+            title="How do u c the blog?"
+            emoji="point_up"
+            class="shadow-xl shadow-primary-100 text-primary-500"
+            @select="updateEmoji"
+          />
+        </client-only>
       </Transition>
     </div>
   </div>
@@ -44,7 +46,6 @@
 
   const updateEmoji = (emoji: any) => {
     toggle();
-    console.log(emoji);
 
     emit('update-emoji', emoji);
   };

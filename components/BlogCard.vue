@@ -67,7 +67,7 @@
       <!-- reactions -->
       <div>
         <div v-for="reaction in blog.reactions">
-          {{ reaction.native }}
+          {{ reaction?.native }}
         </div>
       </div>
       <div class="flex flex-wrap space-x-2">
