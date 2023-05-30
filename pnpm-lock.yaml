@@ -1,9 +1,19 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
 dependencies:
+  '@emoji-mart/data':
+    specifier: ^1.1.2
+    version: 1.1.2
   '@pinia/nuxt':
     specifier: ^0.4.11
     version: 0.4.11(vue@3.3.4)
+  emoji-mart:
+    specifier: ^5.5.2
+    version: 5.5.2
   firebase:
     specifier: ^9.22.0
     version: 9.22.0
@@ -406,6 +416,10 @@ packages:
     transitivePeerDependencies:
       - supports-color
     dev: true
+
+  /@emoji-mart/data@1.1.2:
+    resolution: {integrity: sha512-1HP8BxD2azjqWJvxIaWAMyTySeZY0Osr83ukYjltPVkNXeJvTz7yDrPLBtnrD5uqJ3tg4CcLuuBW09wahqL/fg==}
+    dev: false
 
   /@esbuild-kit/cjs-loader@2.4.2:
     resolution: {integrity: sha512-BDXFbYOJzT/NBEtp71cvsrGPwGAMGRB/349rwKuoxNSiKjPraNNnlK6MIIabViCjqZugu6j+xeMDlEkWdHHJSg==}
@@ -3791,6 +3805,10 @@ packages:
 
   /electron-to-chromium@1.4.406:
     resolution: {integrity: sha512-NXlDDH8Z4tK5ZX7w9dW/lRUsZ0TwL1rg3Sw1e5HKbk3+LCAh3SyUjYyGoxOf9xNxyg+DtaofkFpHS4T5Z2Q26w==}
+
+  /emoji-mart@5.5.2:
+    resolution: {integrity: sha512-Sqc/nso4cjxhOwWJsp9xkVm8OF5c+mJLZJFoFfzRuKO+yWiN7K8c96xmtughYb0d/fZ8UC6cLIQ/p4BR6Pv3/A==}
+    dev: false
 
   /emoji-regex@8.0.0:
     resolution: {integrity: sha512-MSjYzcWNOA0ewAHpz0MxpYFvwg6yjy1NG3xteoqz644VCo/RPgnr1/GGt+ic3iJTzQ8Eu3TdM14SawnVUmGE6A==}

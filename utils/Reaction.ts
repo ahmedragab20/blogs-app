@@ -11,7 +11,7 @@ export default class Reaction {
 
   static async react(blog: Partial<Blog>, reaction: BlogReaction) {
     /**
-     * Scenario 1: the user will add reaction to the blog
+     * Scenario:: the user will add reaction to the blog
      * - if that reaction already exists, add the user to the reaction
      * - if that reaction does not exist, create a new reaction and add the user to the reaction
      * - if the user already reacted to the blog, remove the user from the reaction
