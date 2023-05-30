@@ -33,7 +33,6 @@ export default class Reaction {
     const blogNotExist =
       Generics.getObjectInfoSeparate(blog)?.values?.includes(undefined) ||
       !Generics.getObjectInfoSeparate(blog)?.values?.length;
-    const reactionNotExist = !Generics.getObjectInfoSeparate(reaction)?.values?.length;
 
     if (!user) {
       Debug.error({
@@ -43,7 +42,7 @@ export default class Reaction {
       });
       return;
     }
-    if (blogNotExist || reactionNotExist) {
+    if (blogNotExist || !reaction) {
       Debug.error({
         message: '🚨 Error getting object info',
         source: 'utils/generics.ts',
@@ -58,8 +57,13 @@ export default class Reaction {
 
     try {
       const blogClone: Partial<Blog> = JSON.parse(JSON.stringify(blog));
-      const blogReactionsClone: BlogReaction[] = JSON.parse(JSON.stringify(blogClone.reactions));
+
+      const blogReactionsClone: BlogReaction[] = !!blogClone.reactions?.length
+        ? JSON.parse(JSON.stringify(blogClone.reactions))
+        : [];
+
       const currentUser = useCurrentUser();
+
       const removeReaction = (reaction: BlogReaction) => {
         blogClone.reactions = blogClone.reactions?.filter((rect) => rect.key !== reaction.key);
       };
@@ -83,11 +87,6 @@ export default class Reaction {
 
         if (reactionExist) {
           blogClone.reactions = blog.reactions?.map((rect) => {
-            console.log('🔥', {
-              rect,
-              reaction,
-            });
-
             // looped on the origin data to make sure that the data is up to date always
             if (rect.key === reaction.key) {
               const alreadyReacted = !!rect.users?.find((user: FirestoreUser) => {
@@ -129,9 +128,7 @@ export default class Reaction {
           }
         }
       };
-      if (!blogReactionsClone) {
-        blogClone.reactions = [];
-      }
+
       checkAndUpdateReaction();
 
       await BlogHandler.update(blogClone);

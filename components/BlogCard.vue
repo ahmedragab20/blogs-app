@@ -1,5 +1,5 @@
 <template>
-  <UCard v-if="!!blog">
+  <UCard v-if="!!blog" class="overflow-visible">
     <template #header>
       <div class="flex justify-between items-center">
         <!-- user -->
@@ -64,6 +64,12 @@
       </div>
     </div>
     <div class="mt-4">
+      <!-- reactions -->
+      <div>
+        <div v-for="reaction in blog.reactions">
+          {{ reaction.native }}
+        </div>
+      </div>
       <div class="flex flex-wrap space-x-2">
         <template v-if="!updateBlogMode">
           <div v-for="(tag, i) in blog.tags" :key="i">
@@ -89,18 +95,7 @@
       <div v-if="!updateBlogMode" class="flex space-x-2 justify-between">
         <!-- Reactions -->
         <div class="flex space-x-2" :id="blog.blogId!">
-          <AppEmojis
-            :key="`${Generics.uuid()}${blog.blogId}}`"
-            :el-key="pickerId || ''"
-            variant="soft"
-            :ui="{
-              rounded: 'rounded-full',
-            }"
-            @click="toggleEmojiPicker(blog.blogId!)"
-            :on-select="selectEmoji"
-          >
-            ⚡️
-          </AppEmojis>
+          <AppEmojis :btn-binds="reactionBtnPreset" @updateEmoji="emojiSelected"> ⚡️ </AppEmojis>
         </div>
         <!-- Update Blog -->
         <div v-if="Generics.valuesMatch(user?.uid, blog?.user?.uid)" class="flex space-x-2">
@@ -284,26 +279,32 @@
     }
   };
 
-  const emojiPicker = ref(false);
-  const pickerId = ref<string>();
-  const toggleEmojiPicker = (blogId: string) => {
-    emojiPicker.value = !emojiPicker.value;
-    pickerId.value = blogId;
-  };
-  const selectEmoji = (emoji: any) => {
-    toggleEmojiPicker('');
-    const reaction = Object.assign(emoji, {
-      key: emoji.id,
-      users: blog.reactions?.[emoji.id]?.users ?? [],
-    });
+  // Reactions hustle
+  const reactionBtnPreset = ref({
+    variant: 'soft',
+    ui: {
+      rounded: 'rounded-full',
+    },
+  });
 
-    Reaction.react(blog, reaction);
-    Debug.log({
-      message: 'Emoji selected',
-      data: {
-        emoji,
-      },
-    });
+  const emojiSelected = (em: any) => {
+    const emoji = {
+      id: em._sanitized?.id,
+      colons: em._sanitized?.colons,
+      key: em._sanitized?.id,
+      name: em._sanitized?.name,
+      skin: em._sanitized?.skin,
+      unified: em._sanitized?.unified,
+      native: em._sanitized?.native,
+    };
+
+    console.log(emoji);
+
+    if (!emoji) {
+      return;
+    }
+
+    Reaction.react(blog, emoji as any);
   };
   onMounted(() => {
     blogClone.value = JSON.parse(JSON.stringify(blog));

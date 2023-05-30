@@ -1,13 +1,28 @@
-.slide-fade-enter-active,
-.slide-fade-leave-active {
+.slideIn-fade-enter-active,
+.slideIn-fade-leave-active {
   transition: all 0.3s ease-out;
 }
 
-.slide-fade-enter-from {
-  transform: translateY(-5px);
+.slideIn-fade-enter-from {
+  transform: translateY(-5px) scale(0.9);
   opacity: 0;
 }
 
+.slideIn-fade-leave-to {
+  opacity: 0;
+}
+
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1);
+}
+
+.slide-fade-enter-from,
 .slide-fade-leave-to {
+  transform: translateX(-50px) scale(0.9);
+  box-shadow: none;
   opacity: 0;
 }
