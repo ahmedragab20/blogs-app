@@ -19,11 +19,6 @@ export default class Reaction {
      * - if the user was reacting on other reaction, remove the user from the reaction and add the user to the new reaction
      */
 
-    Debug.log({
-      message: '👍 Reaction button clicked',
-      data: { blog, reaction },
-    });
-
     // prevent spamming
     if (Reaction.buttonSleeping) {
       Debug.log({
@@ -34,7 +29,7 @@ export default class Reaction {
       return;
     }
 
-    const user = useCurrentUser();
+    const user = useCurrentUser(); // main user
     const blogExist =
       Generics.getObjectInfoSeparate(blog)?.values?.includes(undefined) ||
       !Generics.getObjectInfoSeparate(blog)?.values?.length;
@@ -61,71 +56,49 @@ export default class Reaction {
 
     try {
       const blogClone: Partial<Blog> = JSON.parse(JSON.stringify(blog));
+      const blogReactionsClone: BlogReaction[] = JSON.parse(JSON.stringify(blogClone.reactions));
       const currentUser = useCurrentUser();
-      const checkAndUpdateReaction = (oldReaction: Reaction) => {};
-      if (!blogClone.reactions) {
-        blogClone.reactions = [];
-      }
+      const removeReaction = (reaction: BlogReaction) => {
+        blogClone.reactions = blogClone.reactions?.filter((rect) => rect.key !== reaction.key);
+      };
+      const clearBlogUser = (reaction: BlogReaction) => {
+        reaction.users = reaction.users?.filter(
+          (user: FirestoreUser) => user.uid !== currentUser.value?.uid
+        );
+      };
+      const usr: FirestoreUser = {
+        // firestore user
+        uid: currentUser.value?.uid!,
+        displayName: currentUser.value?.displayName!,
+        email: currentUser.value?.email!,
+        photoURL: currentUser.value?.photoURL!,
+      };
 
-      const oldRec = blogClone.reactions?.find(
-        (rect) => !!rect.users?.find((user: FirestoreUser) => user.uid === currentUser.value?.uid)
-      );
-
-      if (oldRec) {
-        blogClone.reactions = blogClone.reactions?.map((rect) => {
-          if (rect.key === rect.key) {
-            rect.users = rect.users?.filter(
-              (user: FirestoreUser) => user.uid !== currentUser.value?.uid
-            );
-          }
-          return rect;
+      const handleReaction = () => {
+        const reactionExist: boolean = !!blogReactionsClone?.find(
+          (rect) => rect.key === reaction.key
+        );
+        const userAlreadyReacted: boolean = !!blogReactionsClone?.find((rect) => {
+          return !!rect.users?.find((user: FirestoreUser) => {
+            return user?.uid === currentUser.value?.uid;
+          });
         });
 
-        if (!reaction.users?.length) {
-          blogClone.reactions = blogClone.reactions?.filter((rect) => rect.key !== reaction.key);
-        }
-
-        if (oldRec.key !== reaction.key) {
-          const usr: FirestoreUser = {
-            uid: currentUser.value?.uid!,
-            displayName: currentUser.value?.displayName!,
-            email: currentUser.value?.email!,
-            photoURL: currentUser.value?.photoURL!,
-          };
-
-          // check if reaction already exists
-          const reactionExist = blogClone.reactions?.find((rect) => rect.key === reaction.key);
-
-          if (reactionExist) {
-            blogClone.reactions = blogClone.reactions?.map((rect) => {
-              if (rect.key === reaction.key) {
-                rect.users = [...rect.users, usr];
-              }
-              return rect;
-            });
-          } else {
-            blogClone.reactions?.push({
-              ...reaction,
-              users: [usr],
-            });
-          }
-        }
-      } else {
-        const usr: FirestoreUser = {
-          uid: currentUser.value?.uid!,
-          displayName: currentUser.value?.displayName!,
-          email: currentUser.value?.email!,
-          photoURL: currentUser.value?.photoURL!,
-        };
-
-        // check if reaction already exists
-        const reactionExist = blogClone.reactions?.find((rect) => rect.key === reaction.key);
-
         if (reactionExist) {
-          blogClone.reactions = blogClone.reactions?.map((rect) => {
-            if (rect.key === reaction.key) {
-              rect.users = [...rect.users, usr];
+          console.log('🙌🏻 reaction exists');
+
+          blogClone.reactions = blog.reactions?.map((rect) => {
+            console.log('🎢');
+            clearBlogUser(rect);
+
+            // looped on the origin data to make sure that the data is up to date always
+            const targetReaction = blogReactionsClone?.find((rect) => rect.key === reaction.key);
+            console.log('🎢', targetReaction);
+
+            if (targetReaction) {
+              rect.users = [...targetReaction.users!, usr];
             }
+
             return rect;
           });
         } else {
@@ -134,7 +107,26 @@ export default class Reaction {
             users: [usr],
           });
         }
+      };
+
+      const checkAndUpdateReaction = () => {
+        handleReaction();
+
+        for (const r of blog.reactions!) {
+          if (!r.users?.length) {
+            removeReaction(r);
+          }
+        }
+      };
+      if (!blogReactionsClone) {
+        blogClone.reactions = [];
       }
+      //
+      //       const oldRec = blogReactionsClone?.find(
+      //         (rect) => !!rect.users?.find((user: FirestoreUser) => user.uid === currentUser.value?.uid)
+      //       );
+
+      checkAndUpdateReaction();
 
       await BlogHandler.update(blogClone);
       await Reaction.sleep();

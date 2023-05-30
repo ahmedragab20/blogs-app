@@ -54,6 +54,7 @@
       </div>
     </div>
     <div class="mt-4 relative">
+      {{ blog.reactions?.length }}
       <div
         id="blog-content"
         class="text-sm text-gray-500"
