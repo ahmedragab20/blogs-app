@@ -1,7 +1,6 @@
 <template>
   <div class="min-h-screen">
     <UContainer>
-      <AppEmojis />
       <!-- Add blog -->
       <div>
         <BlogsAddNew @click="clickHandler(toggleAddBlogDialog)" />

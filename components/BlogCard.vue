@@ -54,7 +54,6 @@
       </div>
     </div>
     <div class="mt-4 relative">
-      {{ blog.reactions?.length }}
       <div
         id="blog-content"
         class="text-sm text-gray-500"
@@ -89,17 +88,19 @@
     <template #footer>
       <div v-if="!updateBlogMode" class="flex space-x-2 justify-between">
         <!-- Reactions -->
-        <div class="flex space-x-2">
-          <UButton
-            v-for="(reaction, i) in blogReactions?.sort((a, b) => (a.key !== 'like' ? 1 : -1))"
-            :key="i"
-            :icon="reaction.icon"
-            variant="ghost"
-            class="capitalize border-b"
-            @click="Reaction.react(blog, reaction)"
+        <div class="flex space-x-2" :id="blog.blogId!">
+          <AppEmojis
+            :key="`${Generics.uuid()}${blog.blogId}}`"
+            :el-key="pickerId || ''"
+            variant="soft"
+            :ui="{
+              rounded: 'rounded-full',
+            }"
+            @click="toggleEmojiPicker(blog.blogId!)"
+            :on-select="selectEmoji"
           >
-            {{ reaction.key }}
-          </UButton>
+            ⚡️
+          </AppEmojis>
         </div>
         <!-- Update Blog -->
         <div v-if="Generics.valuesMatch(user?.uid, blog?.user?.uid)" class="flex space-x-2">
@@ -281,6 +282,28 @@
     } finally {
       deletingBlog.value = false;
     }
+  };
+
+  const emojiPicker = ref(false);
+  const pickerId = ref<string>();
+  const toggleEmojiPicker = (blogId: string) => {
+    emojiPicker.value = !emojiPicker.value;
+    pickerId.value = blogId;
+  };
+  const selectEmoji = (emoji: any) => {
+    toggleEmojiPicker('');
+    const reaction = Object.assign(emoji, {
+      key: emoji.id,
+      users: blog.reactions?.[emoji.id]?.users ?? [],
+    });
+
+    Reaction.react(blog, reaction);
+    Debug.log({
+      message: 'Emoji selected',
+      data: {
+        emoji,
+      },
+    });
   };
   onMounted(() => {
     blogClone.value = JSON.parse(JSON.stringify(blog));
