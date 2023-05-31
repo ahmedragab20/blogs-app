@@ -1,33 +1,36 @@
 import { Blog, BlogReaction, FirestoreUser } from '~/types';
 
 export default class Reaction {
-  protected static buttonSleeping: boolean;
-  private static delayTime: number = 1000;
-
-  // setter for buttonSleeping
-  protected static async sleep() {
-    return new Promise((resolve) => setTimeout(resolve, Reaction.delayTime));
-  }
-
-  static async react(blog: Partial<Blog>, reaction: BlogReaction) {
+  private static isReacting = false;
+  static async react(blogId: string, reaction: BlogReaction) {
     /**
      * Scenario:: the user will add reaction to the blog
+     * - wait until the function fully executes if it was still executing
      * - if that reaction already exists, add the user to the reaction
      * - if that reaction does not exist, create a new reaction and add the user to the reaction
      * - if the user already reacted to the blog, remove the user from the reaction
      * - if the user is the only one who reacted to the reaction, remove the reaction (after that user reacts)
      * - if the user was reacting on other reaction, remove the user from the reaction and add the user to the new reaction
      */
-
-    // prevent spamming
-    if (Reaction.buttonSleeping) {
-      Debug.log({
-        message: '😴 Button is sleeping',
-        source: 'utils/generics.ts',
-        useOnProduction: true,
-      });
+    if (Reaction.isReacting) {
+      // Function is already running, ignore the current call
       return;
     }
+
+    const blog = (await BlogHandler.get(blogId)) as Blog;
+    /**
+     * I have notes about this pattern.
+     *
+     * This pattern is unlikely to work with a normal DB.
+     * Additionally, it's not recommended to use this approach in an app
+     * that might have a large number of active users simultaneously.
+     *
+     * The main problem is that we have to query the DB with each click,
+     * which can be inefficient and slow down the app.
+     *
+     * However, if we're using Firestore (a document DB) and have a small number of users,
+     * it's acceptable to use this approach to ensure we always get the latest DB results.
+     */
 
     const user = useCurrentUser(); // main user
     const blogNotExist =
@@ -56,14 +59,11 @@ export default class Reaction {
     }
 
     try {
-      const blogClone: Partial<Blog> = JSON.parse(JSON.stringify(blog));
-
-      const blogReactionsClone: BlogReaction[] = JSON.parse(JSON.stringify(blogClone.reactions));
-
+      Reaction.isReacting = true;
       const currentUser = useCurrentUser();
 
       const removeReaction = (reaction: BlogReaction) => {
-        blogClone.reactions = blogClone.reactions?.filter((rect) => rect.key !== reaction.key);
+        blog.reactions = blog.reactions?.filter((rect) => rect.key !== reaction.key);
       };
       const clearBlogUser = (reaction: BlogReaction) => {
         reaction.users = reaction.users?.filter(
@@ -78,26 +78,11 @@ export default class Reaction {
         photoURL: currentUser.value?.photoURL!,
       };
 
+      const reactionExist = !!blog.reactions?.some((rect) => rect.key === reaction.key);
+
       const handleReaction = () => {
-        console.log({
-          blogReactions: blog.reactions,
-          blogClone,
-          blogReactionsClone,
-          reaction,
-          currentUser,
-        });
-
-        function reactionExists(blog: Partial<Blog>, reaction: BlogReaction): boolean {
-          if (!blog || !blog.reactions || !reaction) {
-            return false;
-          }
-
-          const reactionExist = blog.reactions.some((rect) => rect.key === reaction.key);
-          return reactionExist;
-        }
-
-        if (reactionExists(blog, reaction)) {
-          blogClone.reactions = blog.reactions?.map((rect) => {
+        if (reactionExist) {
+          blog.reactions = blog.reactions?.map((rect) => {
             // looped on the origin data to make sure that the data is up to date always
             if (rect.key === reaction.key) {
               const alreadyReacted = !!rect.users?.find((user: FirestoreUser) => {
@@ -107,7 +92,13 @@ export default class Reaction {
               if (alreadyReacted) {
                 clearBlogUser(rect);
               } else {
-                rect.users = [...rect.users, usr];
+                rect.users = [
+                  ...rect.users,
+                  {
+                    createdAt: new Date(),
+                    ...usr,
+                  },
+                ];
               }
             } else {
               clearBlogUser(rect);
@@ -117,31 +108,20 @@ export default class Reaction {
 
           return;
         } else {
-          console.log('reaction does not exist 🤌🏻', {
-            blog,
-            reaction,
-          });
-          // RECHECK AGAIN
-          if (reactionExists(blog, reaction)) {
-            Debug.error({
-              message: '🚨 I`s WRONG!!',
-              source: 'utils/generics.ts',
-              data: { blog, reaction },
-              useOnProduction: true,
-            });
-          }
-
-          blogClone.reactions?.push({
-            ...reaction,
-            createdAt: new Date(),
-            users: [usr],
-          });
-
-          for (const blogR of blogClone.reactions!) {
+          for (const blogR of blog.reactions!) {
             if (blogR.key !== reaction.key) {
               clearBlogUser(blogR);
             }
           }
+          blog.reactions?.push({
+            ...reaction,
+            users: [
+              {
+                createdAt: new Date(),
+                ...usr,
+              },
+            ],
+          });
         }
       };
 
@@ -157,15 +137,19 @@ export default class Reaction {
 
       checkAndUpdateReaction();
 
-      await BlogHandler.update(blogClone);
-      await Reaction.sleep();
+      await BlogHandler.update(blog);
     } catch (error) {
+      Reaction.isReacting = false;
       Debug.error({
         message: '🚨 Error reacting to blog',
         source: 'utils/generics.ts',
         data: { blog, reaction, error },
         useOnProduction: true,
       });
+    } finally {
+      setTimeout(() => {
+        Reaction.isReacting = false;
+      }, 1000);
     }
   }
 }

@@ -18,14 +18,14 @@
             <div
               v-for="rect in reactions"
               :key="rect.icon"
-              class="w-10 h-10 flex justify-center items-center duration-300 hover:scale-125 hover:-translate-y-1 hover:drop-shadow-md cursor-pointer"
+              class="w-10 h-10 flex justify-center items-center duration-300 scale-100 active:scale-125 active:-translate-y-1 translate-y-0 hover:scale-125 hover:-translate-y-1 hover:drop-shadow-md cursor-pointer"
               @click="updateEmoji(rect)"
             >
               <UTooltip :text="rect.name" class="capitalize">
                 <img
                   :src="rect.icon"
                   :alt="`emoji-${rect.name}`"
-                  class="w-full h-full object-contain select-none pointer-events-none"
+                  class="w-full h-full duration-300 object-contain select-none pointer-events-none"
                 />
               </UTooltip>
             </div>
@@ -59,7 +59,6 @@
   };
   const updateEmoji = (emoji: BlogReaction) => {
     toggle();
-    console.log(emoji);
     emit('update-emoji', emoji);
   };
   onMounted(() => {

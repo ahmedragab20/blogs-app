@@ -193,4 +193,20 @@ export class Generics {
 
     return true;
   }
+  static clone = <T>(obj: T): T => {
+    if (!obj) {
+      Debug.error({
+        message: '🚨 Error cloning object',
+        source: 'utils/generics.ts',
+        data: obj,
+      });
+
+      throw createError({
+        message: '🚨 Error cloning object',
+        statusCode: 500,
+      });
+    }
+
+    return JSON.parse(JSON.stringify(obj));
+  };
 }

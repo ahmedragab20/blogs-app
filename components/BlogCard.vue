@@ -305,9 +305,9 @@
   });
 
   const emojiSelected = (reaction: BlogReaction) => {
-    Reaction.react(blog, reaction);
+    Reaction.react(blog.blogId!, reaction);
   };
-  onMounted(() => {
+  watchEffect(() => {
     blogClone.value = JSON.parse(JSON.stringify(blog));
     updatedTags.value = blogClone.value?.tags ?? [];
   });

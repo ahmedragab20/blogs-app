@@ -11,6 +11,22 @@ import {
 import { Blog } from '~/types';
 
 export default class BlogHandler {
+  static async get(blogId: string) {
+    try {
+      const db: Firestore = useFirestore();
+      const q = query(collection(db, 'blogs'), where('blogId', '==', blogId));
+      const querySnapshot = await getDocs(q);
+      const blog = querySnapshot.docs.map((doc) => doc.data())[0] as Blog;
+
+      return blog;
+    } catch (error) {
+      Debug.error({
+        message: '🚨 Error getting document',
+        source: 'index.vue',
+        data: error,
+      });
+    }
+  }
   static async create(blog: Blog) {
     try {
       if (!blog) {

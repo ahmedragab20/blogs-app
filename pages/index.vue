@@ -8,8 +8,8 @@
 
       <!-- blogs -->
       <template v-if="blogs?.length">
-        <div v-for="(blog, i) in blogs" :key="i" class="my-3">
-          <BlogCard :blog="blog" />
+        <div v-for="(blog, i) in blogs" class="my-3">
+          <BlogCard :blog="blog" :key="i" />
         </div>
       </template>
     </UContainer>

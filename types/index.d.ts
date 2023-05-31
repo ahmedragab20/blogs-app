@@ -22,8 +22,12 @@ interface Reaction {
   name: string;
 }
 
+interface ReactionUser extends FirestoreUser {
+  createdAt: Date;
+}
+
 interface BlogReaction extends Reaction {
-  users: FirestoreUser[];
+  users: ReactionUser[];
   createdAt: Date;
 }
 export interface Blog {
