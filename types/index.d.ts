@@ -19,6 +19,7 @@ export interface Tag {
 interface Reaction {
   icon: string;
   key: string;
+  name: string;
 }
 
 interface BlogReaction extends Reaction {

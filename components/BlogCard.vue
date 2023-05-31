@@ -65,11 +65,6 @@
     </div>
     <div class="mt-4">
       <!-- reactions -->
-      <div>
-        <div v-for="reaction in blog.reactions">
-          {{ reaction?.native }}
-        </div>
-      </div>
       <div class="flex flex-wrap space-x-2">
         <template v-if="!updateBlogMode">
           <div v-for="(tag, i) in blog.tags" :key="i">

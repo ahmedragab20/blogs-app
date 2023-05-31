@@ -22,7 +22,7 @@
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  transform: translateX(-50px) scale(0.9);
+  transform: translateX(-70px) scale(0.7);
   box-shadow: none;
   opacity: 0;
 }
