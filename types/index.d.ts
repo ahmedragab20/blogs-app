@@ -24,6 +24,7 @@ interface Reaction {
 
 interface BlogReaction extends Reaction {
   users: FirestoreUser[];
+  createdAt: Date;
 }
 export interface Blog {
   blogId?: string;

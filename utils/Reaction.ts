@@ -79,11 +79,24 @@ export default class Reaction {
       };
 
       const handleReaction = () => {
-        const reactionExist: boolean = !!blogReactionsClone?.find(
-          (rect) => rect.key === reaction.key
-        );
+        console.log({
+          blogReactions: blog.reactions,
+          blogClone,
+          blogReactionsClone,
+          reaction,
+          currentUser,
+        });
 
-        if (reactionExist) {
+        function reactionExists(blog: Partial<Blog>, reaction: BlogReaction): boolean {
+          if (!blog || !blog.reactions || !reaction) {
+            return false;
+          }
+
+          const reactionExist = blog.reactions.some((rect) => rect.key === reaction.key);
+          return reactionExist;
+        }
+
+        if (reactionExists(blog, reaction)) {
           blogClone.reactions = blog.reactions?.map((rect) => {
             // looped on the origin data to make sure that the data is up to date always
             if (rect.key === reaction.key) {
@@ -104,8 +117,23 @@ export default class Reaction {
 
           return;
         } else {
+          console.log('reaction does not exist 🤌🏻', {
+            blog,
+            reaction,
+          });
+          // RECHECK AGAIN
+          if (reactionExists(blog, reaction)) {
+            Debug.error({
+              message: '🚨 I`s WRONG!!',
+              source: 'utils/generics.ts',
+              data: { blog, reaction },
+              useOnProduction: true,
+            });
+          }
+
           blogClone.reactions?.push({
             ...reaction,
+            createdAt: new Date(),
             users: [usr],
           });
 
