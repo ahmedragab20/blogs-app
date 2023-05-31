@@ -58,9 +58,7 @@ export default class Reaction {
     try {
       const blogClone: Partial<Blog> = JSON.parse(JSON.stringify(blog));
 
-      const blogReactionsClone: BlogReaction[] = !!blogClone.reactions?.length
-        ? JSON.parse(JSON.stringify(blogClone.reactions))
-        : [];
+      const blogReactionsClone: BlogReaction[] = JSON.parse(JSON.stringify(blogClone.reactions));
 
       const currentUser = useCurrentUser();
 
