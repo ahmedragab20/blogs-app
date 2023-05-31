@@ -95,7 +95,13 @@
       <div v-if="!updateBlogMode" class="flex space-x-2 justify-between">
         <!-- Reactions -->
         <div class="flex space-x-2" :id="blog.blogId!">
-          <AppEmojis :btn-binds="reactionBtnPreset" @updateEmoji="emojiSelected"> ⚡️ </AppEmojis>
+          <AppEmojis
+            :key="`app-emojis-${blog.blogId}`"
+            :btn-binds="reactionBtnPreset"
+            @updateEmoji="emojiSelected"
+          >
+            ⚡️
+          </AppEmojis>
         </div>
         <!-- Update Blog -->
         <div v-if="Generics.valuesMatch(user?.uid, blog?.user?.uid)" class="flex space-x-2">
