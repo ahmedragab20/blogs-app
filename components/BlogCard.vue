@@ -87,6 +87,21 @@
       </div>
     </div>
     <template #footer>
+      <div>
+        <div class="pb-2">
+          <div v-for="(rect, i) in blog.reactions" :key="i">
+            <div class="flex items-center space-x-2">
+              <div>
+                <UAvatar
+                  class="select-none pointer-events-none"
+                  :src="rect.icon"
+                  :alt="rect.icon"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div v-if="!updateBlogMode" class="flex space-x-2 justify-between">
         <!-- Reactions -->
         <div class="flex space-x-2" :id="blog.blogId!">
@@ -166,7 +181,8 @@
 </template>
 <script setup lang="ts">
   import { useGeneralStore } from '~/stores/general';
-  import { Blog, Tag } from '~/types';
+  import { Blog, BlogReaction, Tag } from '~/types';
+  import Reaction from '~/utils/Reaction';
 
   const { blogTags, blogReactions } = useGeneralStore();
 
@@ -288,24 +304,8 @@
     },
   });
 
-  const emojiSelected = (em: any) => {
-    const emoji = {
-      id: em._sanitized?.id,
-      colons: em._sanitized?.colons,
-      key: em._sanitized?.id,
-      name: em._sanitized?.name,
-      skin: em._sanitized?.skin,
-      unified: em._sanitized?.unified,
-      native: em._sanitized?.native,
-    };
-
-    console.log(emoji);
-
-    if (!emoji) {
-      return;
-    }
-
-    Reaction.react(blog, emoji as any);
+  const emojiSelected = (reaction: BlogReaction) => {
+    Reaction.react(blog, reaction);
   };
   onMounted(() => {
     blogClone.value = JSON.parse(JSON.stringify(blog));

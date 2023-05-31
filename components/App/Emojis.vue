@@ -1,10 +1,14 @@
 <template>
-  <div class="relative">
-    <UButton :id="`picker-btn-${componentId}`" v-bind="btnBinds" @click="toggle">
+  <div @mouseleave="toggle(false)" class="relative">
+    <UButton :id="`picker-btn-${componentId}`" v-bind="btnBinds" @click="toggle()">
       <slot />
     </UButton>
 
-    <div :id="`picker-${componentId}`" class="absolute -top-10 left-0 z-10">
+    <div
+      @mouseover="toggle(true)"
+      :id="`picker-${componentId}`"
+      class="absolute -top-10 left-0 z-10"
+    >
       <Transition name="slide-fade">
         <div
           v-if="emojiPickerSelected"
@@ -15,6 +19,7 @@
               v-for="rect in reactions"
               :key="rect.icon"
               class="w-10 h-10 flex justify-center items-center duration-300 hover:scale-125 hover:-translate-y-1 hover:drop-shadow-md cursor-pointer"
+              @click="updateEmoji(rect)"
             >
               <UTooltip :text="rect.name" class="capitalize">
                 <img
@@ -33,6 +38,7 @@
 
 <script setup lang="ts">
   import { useGeneralStore } from '~/stores/general';
+  import { BlogReaction } from '~/types';
 
   const emit = defineEmits<{
     'update-emoji': [emoji: any];
@@ -48,10 +54,10 @@
   const reactions = computed(() => generalStore.blogReactions);
 
   const emojiPickerSelected = ref(false);
-  const toggle = () => {
-    emojiPickerSelected.value = !emojiPickerSelected.value;
+  const toggle = (v?: boolean) => {
+    emojiPickerSelected.value = v ?? !emojiPickerSelected.value;
   };
-  const updateEmoji = (emoji: any) => {
+  const updateEmoji = (emoji: BlogReaction) => {
     toggle();
     console.log(emoji);
     emit('update-emoji', emoji);
