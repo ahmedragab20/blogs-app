@@ -195,7 +195,7 @@
 </template>
 <script setup lang="ts">
   import { useGeneralStore } from '~/stores/general';
-  import { Blog, BlogReaction, Tag } from '~/types';
+  import { Blog, BlogReaction, ReactionReturn, Tag } from '~/types';
   import Reaction from '~/utils/Reaction';
 
   const { blogTags, blogReactions } = useGeneralStore();
@@ -328,12 +328,16 @@
   const myReaction = ref<BlogReaction>();
 
   const emojiSelected = async (reaction: BlogReaction) => {
-    await Reaction.react(blog.blogId!, reaction);
+    //@ts-ignore
+    const { count }: Partial<ReactionReturn> = await Reaction.react(blog.blogId!, reaction, {
+      count: true,
+    });
+
+    localReactionsCount.value = count;
+
     if (myReaction.value?.key === reaction.key) {
-      localReactionsCount.value = localReactionsCount.value - 1;
       myReaction.value = undefined;
     } else {
-      localReactionsCount.value = localReactionsCount.value + 1;
       myReaction.value = reaction;
     }
   };
@@ -345,7 +349,8 @@
     myReaction.value = blogClone.value.reactions?.find((rc: BlogReaction) => {
       return rc?.users?.some((u) => u.uid === user.value?.uid);
     });
-
+  });
+  onMounted(() => {
     localReactionsCount.value = allReactionsCount.value;
   });
 </script>

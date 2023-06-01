@@ -1,8 +1,21 @@
-import { Blog, BlogReaction, FirestoreUser } from '~/types';
+import { Blog, BlogReaction, FirestoreUser, ReactionReturn } from '~/types';
+interface ReactionOptions {
+  getUsers?: boolean;
+  count?: boolean;
+  [key: string]: any;
+}
 
 export default class Reaction {
   private static isReacting = false;
-  static async react(blogId: string, reaction: BlogReaction) {
+  protected static reactionCount = 0;
+  protected static reactionUsers: FirestoreUser[] = [];
+  protected static theReturn = {} as ReactionReturn;
+
+  static async react(
+    blogId: string,
+    reaction: BlogReaction,
+    options?: Partial<ReactionOptions>
+  ): Promise<void | Partial<ReactionReturn>> {
     /**
      * Scenario:: the user will add reaction to the blog
      * - wait until the function fully executes if it was still executing
@@ -33,10 +46,6 @@ export default class Reaction {
      */
 
     const user = useCurrentUser(); // main user
-    const blogNotExist =
-      Generics.getObjectInfoSeparate(blog)?.values?.includes(undefined) ||
-      !Generics.getObjectInfoSeparate(blog)?.values?.length;
-
     if (!user) {
       Debug.error({
         message: '😐User is not logged in',
@@ -45,14 +54,11 @@ export default class Reaction {
       });
       return;
     }
-    if (blogNotExist || !reaction) {
+    if (!blog || !reaction) {
       Debug.error({
         message: '🚨 Error getting object info',
         source: 'utils/generics.ts',
-        data: {
-          blog,
-          reaction,
-        },
+        data: { blog, reaction },
         useOnProduction: true,
       });
       return;
@@ -61,58 +67,55 @@ export default class Reaction {
     try {
       Reaction.isReacting = true;
       const currentUser = useCurrentUser();
-
-      const removeReaction = (reaction: BlogReaction) => {
-        blog.reactions = blog.reactions?.filter((rect) => rect.key !== reaction.key);
-      };
-      const clearBlogUser = (reaction: BlogReaction) => {
-        reaction.users = reaction.users?.filter(
-          (user: FirestoreUser) => user.uid !== currentUser.value?.uid
-        );
-      };
       const usr: FirestoreUser = {
-        // firestore user
         uid: currentUser.value?.uid!,
         displayName: currentUser.value?.displayName!,
         email: currentUser.value?.email!,
         photoURL: currentUser.value?.photoURL!,
       };
 
-      const reactionExist = !!blog.reactions?.some((rect) => rect.key === reaction.key);
+      const reactionExist = blog.reactions?.some((rect) => rect.key === reaction.key);
+
+      const removeReaction = (reaction: BlogReaction) => {
+        blog.reactions = blog.reactions?.filter((rect) => rect.key !== reaction.key);
+      };
+
+      const clearBlogUser = (reaction: BlogReaction) => {
+        reaction.users = reaction.users?.filter(
+          (user: FirestoreUser) => user.uid !== currentUser.value?.uid
+        );
+      };
+
+      const addUserToReaction = (reaction: BlogReaction) => {
+        reaction.users = [
+          ...reaction.users,
+          {
+            createdAt: new Date(),
+            ...usr,
+          },
+        ];
+      };
 
       const handleReaction = () => {
         if (reactionExist) {
           blog.reactions = blog.reactions?.map((rect) => {
-            // looped on the origin data to make sure that the data is up to date always
             if (rect.key === reaction.key) {
-              const alreadyReacted = !!rect.users?.find((user: FirestoreUser) => {
-                return user?.uid === currentUser.value?.uid;
-              });
+              const alreadyReacted = rect.users?.some(
+                (user: FirestoreUser) => user?.uid === currentUser.value?.uid
+              );
 
               if (alreadyReacted) {
                 clearBlogUser(rect);
               } else {
-                rect.users = [
-                  ...rect.users,
-                  {
-                    createdAt: new Date(),
-                    ...usr,
-                  },
-                ];
+                addUserToReaction(rect);
               }
             } else {
               clearBlogUser(rect);
             }
             return rect;
           });
-
-          return;
         } else {
-          for (const blogR of blog.reactions!) {
-            if (blogR.key !== reaction.key) {
-              clearBlogUser(blogR);
-            }
-          }
+          blog.reactions?.forEach(clearBlogUser);
           blog.reactions?.push({
             ...reaction,
             users: [
@@ -127,19 +130,31 @@ export default class Reaction {
 
       const checkAndUpdateReaction = () => {
         handleReaction();
-
-        for (const r of blog.reactions!) {
+        blog.reactions?.forEach((r) => {
           if (!r.users?.length) {
             removeReaction(r);
           }
-        }
+        });
       };
 
       checkAndUpdateReaction();
-
       await BlogHandler.update(blog);
+
+      if (options?.['getUsers']) {
+        const allUsersSet = new Set<FirestoreUser>();
+        blog.reactions?.forEach((r) => r.users?.forEach((u) => allUsersSet.add(u)));
+
+        Reaction.reactionUsers = Array.from(allUsersSet);
+        Reaction.theReturn['users'] = Reaction.reactionUsers;
+      }
+
+      if (options?.count) {
+        Reaction.reactionCount = blog.reactions?.length || 0;
+        Reaction.theReturn['count'] = Reaction.reactionCount;
+      }
+
+      return Reaction.theReturn;
     } catch (error) {
-      Reaction.isReacting = false;
       Debug.error({
         message: '🚨 Error reacting to blog',
         source: 'utils/generics.ts',

@@ -43,5 +43,11 @@ export interface Blog {
   // attachments: string[]; TODO:: investigate adding it later
 }
 
+export interface ReactionReturn {
+  users: FirestoreUser[];
+  count: number;
+  [key: string]: any;
+}
+
 // types
 export type AuthLand = 'login' | 'register' | 'forgot' | 'reset' | 'verify';
