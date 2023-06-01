@@ -29,15 +29,6 @@
 
   const blogs = useCollection(collection(db, 'blogs'));
 
-  const blogsSorted = () => {
-    return blogs.value?.sort((a, b) => {
-      const aDate = new Date(a.createdAt?.seconds * 1000);
-      const bDate = new Date(b.createdAt?.seconds * 1000);
-
-      return bDate.getTime() - aDate.getTime();
-    });
-  };
-
   const addBlogDialog = ref(false);
   const toggleAddBlogDialog = () => {
     addBlogDialog.value = !addBlogDialog.value;
@@ -48,10 +39,5 @@
       usingInput: false,
       handler: () => toggleAddBlogDialog(),
     },
-  });
-
-  watchEffect(() => {
-    console.log({ blogs: blogs.value });
-    blogsSorted();
   });
 </script>
