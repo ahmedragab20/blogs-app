@@ -31,9 +31,8 @@ export class Generics {
   }
   static valuesMatch<T>(a: T, b: T): boolean {
     if (!a || !b) {
-      Debug.error({
+      Debug.warn({
         message: '🚨 Error comparing values',
-        source: 'utils/generics.ts',
         data: { a, b },
       });
     }

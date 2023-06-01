@@ -136,4 +136,34 @@ export default class BlogHandler {
       });
     }
   }
+  static async getUserBlogs(userId: string) {
+    try {
+      if (!userId) {
+        Debug.error({
+          message: `You must provide a userId to get blogs`,
+          source: 'BlogHandler.ts',
+          data: userId,
+        });
+
+        return;
+      }
+
+      const db: Firestore = useFirestore();
+      const q = query(collection(db, 'blogs'), where('user.uid', '==', userId));
+      const querySnapshot = await getDocs(q);
+      const blogs = querySnapshot.docs.map((doc) => doc.data()) as Blog[];
+
+      return blogs;
+    } catch (error) {
+      Debug.error({
+        message: `Couldn't get blogs for user with id: ${userId}`,
+        data: error,
+        useOnProduction: true,
+      });
+      throw createError({
+        message: "Couldn't get blogs",
+        statusCode: 500,
+      });
+    }
+  }
 }

@@ -131,7 +131,6 @@
         <div v-if="Generics.valuesMatch(user?.uid, blog?.user?.uid)" class="flex space-x-2">
           <div>
             <UButton @click="toggleUpdateBlogMode" icon="i-heroicons-pencil" variant="soft">
-              Update
             </UButton>
           </div>
           <div>
@@ -142,7 +141,6 @@
               color="red"
               :loading="deletingBlog"
             >
-              Delete
             </UButton>
           </div>
         </div>
@@ -197,8 +195,8 @@
   import { useGeneralStore } from '~/stores/general';
   import { Blog, BlogReaction, ReactionReturn, Tag } from '~/types';
   import Reaction from '~/utils/Reaction';
-
-  const { blogTags, blogReactions } = useGeneralStore();
+  const { blogTags } = useGeneralStore();
+  const { clickHandler } = useGuest();
 
   const { blog } = defineProps<{
     blog: Partial<Blog>;
@@ -328,6 +326,11 @@
   const myReaction = ref<BlogReaction>();
 
   const emojiSelected = async (reaction: BlogReaction) => {
+    const user = useCurrentUser()?.value?.uid;
+    // check if user is logged in
+    clickHandler(); //TODO:: improve the naming of this function
+    if (!user) return;
+
     //@ts-ignore
     const { count }: Partial<ReactionReturn> = await Reaction.react(blog.blogId!, reaction, {
       count: true,

@@ -1,5 +1,5 @@
 <template>
-  <div class="text-center min-h-[90vh]">
+  <UContainer class="min-h-[90vh]">
     <div v-if="profileUser?.uid" class="flex flex-col items-center justify-center">
       <div class="w-32 h-32 rounded-full overflow-hidden shadow-xl">
         <img
@@ -8,17 +8,9 @@
           class="w-full h-full object-cover select-none pointer-events-none"
         />
       </div>
-      <div>
+      <div class="text-center">
         <h2 class="text-2xl font-bold mt-4">{{ profileUser.displayName }}</h2>
         <p class="text-gray-500 text-sm">{{ profileUser.email }}</p>
-      </div>
-
-      <div>
-        <p
-          class="text-gray-500 text-sm my-5 shadow-lg shadow-red-200 border-t-2 border-red-100 py-1 px-2 rounded-lg"
-        >
-          bro! show me my recent blogs!! I'm grumpy now!!😐
-        </p>
       </div>
 
       <!-- update profile -->
@@ -39,6 +31,19 @@
           </UButton>
         </div>
       </template>
+
+      <!-- my blogs -->
+      <template v-if="myBlogs?.length">
+        <AppDivider class="mt-6" />
+        <div>
+          <h3 class="font-bold font-headline text-primary-500 mt-4">
+            My Blogs ({{ myBlogs.length }})
+          </h3>
+        </div>
+        <div v-for="(blog, i) in myBlogs" class="my-3 w-full sm:max-w-[600px]">
+          <BlogCard :blog="blog" :key="i" />
+        </div>
+      </template>
     </div>
     <div v-else-if="!loading" class="flex flex-col items-center justify-center min-h-[60vh] gap-5">
       <UIcon name="i-heroicons-x-circle" class="text-6xl text-red-300 dark:bg-red-500" />
@@ -47,7 +52,7 @@
     <div v-else class="flex justify-center items-center">
       <AppSpinner />
     </div>
-  </div>
+  </UContainer>
 
   <!-- Modals -->
   <!-- update Dialog -->
@@ -178,7 +183,7 @@
 <script setup lang="ts">
   import { User, deleteUser, getAuth, updateProfile } from 'firebase/auth';
   import { useGeneralStore } from '~/stores/general';
-  import { FirestoreUser } from '~/types';
+  import { Blog, FirestoreUser } from '~/types';
 
   definePageMeta({
     middleware: ['auth'],
@@ -197,6 +202,8 @@
   const foreignUser = ref<FirestoreUser>();
 
   const profileUser = computed(() => (myProfile.value ? user.value : foreignUser.value));
+
+  const myBlogs = ref<Blog[]>();
 
   const newPic = ref(''); // new profile picture to solve having to reload the page to see the new profile picture issue
   const userPic = computed(
@@ -311,6 +318,10 @@
         loading.value = false;
       })!;
     }
+  });
+
+  watchEffect(async () => {
+    myBlogs.value = await BlogHandler.getUserBlogs(user.value?.uid as string);
   });
   //TODO:: add verification email cycle
   //TODO:: add password reset cycle

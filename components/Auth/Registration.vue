@@ -74,6 +74,7 @@
   import { User, createUserWithEmailAndPassword, getAuth } from 'firebase/auth';
   import { useFirestore } from 'vuefire';
   const auth = getAuth();
+  const router = useRouter();
 
   const addUserToUsersCollection = async (user: User) => {
     const db = useFirestore();
@@ -99,6 +100,7 @@
       .then(async (userCredential) => {
         const user = userCredential.user;
         await addUserToUsersCollection(user);
+        router.push(`/profile/${user.uid}`);
       })
       .catch((error) => {
         errorMsg.value = error.message;
