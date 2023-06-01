@@ -89,9 +89,9 @@
     <template #footer>
       <div>
         <div class="pb-2">
-          <div v-for="(rect, i) in blog.reactions" :key="i">
-            <div class="flex items-center space-x-2">
-              <div>
+          <div class="flex items-center -space-x-1 overflow-auto py-1">
+            <div v-for="(rect, i) in blog.reactions" :key="i">
+              <div class="hover:scale-110 transition-transform duration-300 ease-in-out">
                 <UAvatar
                   class="select-none pointer-events-none"
                   :src="rect.icon"
@@ -110,7 +110,21 @@
             :btn-binds="reactionBtnPreset"
             @updateEmoji="emojiSelected"
           >
-            ⚡️
+            <div class="flex gap-1">
+              <template v-if="!!myReaction">
+                <div class="w-5 h-5">
+                  <img
+                    :src="myReaction.icon"
+                    :alt="`${myReaction.key} icon`"
+                    class="w-full h-full object-contain"
+                  />
+                </div>
+              </template>
+              <template v-else> 👀</template>
+              <div>
+                {{ localReactionsCount || '--' }}
+              </div>
+            </div>
           </AppEmojis>
         </div>
         <!-- Update Blog -->
@@ -303,12 +317,35 @@
       rounded: 'rounded-full',
     },
   });
+  const allReactionsCount = computed(() => {
+    return blog.reactions?.reduce((acc, curr) => {
+      return acc + curr.users.length;
+    }, 0);
+  });
 
-  const emojiSelected = (reaction: BlogReaction) => {
-    Reaction.react(blog.blogId!, reaction);
+  const localReactionsCount = ref();
+
+  const myReaction = ref<BlogReaction>();
+
+  const emojiSelected = async (reaction: BlogReaction) => {
+    await Reaction.react(blog.blogId!, reaction);
+    if (myReaction.value?.key === reaction.key) {
+      localReactionsCount.value = localReactionsCount.value - 1;
+      myReaction.value = undefined;
+    } else {
+      localReactionsCount.value = localReactionsCount.value + 1;
+      myReaction.value = reaction;
+    }
   };
+
   watchEffect(() => {
-    blogClone.value = JSON.parse(JSON.stringify(blog));
+    blogClone.value = Generics.clone(blog);
     updatedTags.value = blogClone.value?.tags ?? [];
+
+    myReaction.value = blogClone.value.reactions?.find((rc: BlogReaction) => {
+      return rc?.users?.some((u) => u.uid === user.value?.uid);
+    });
+
+    localReactionsCount.value = allReactionsCount.value;
   });
 </script>

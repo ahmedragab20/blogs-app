@@ -7,12 +7,12 @@
     <div
       @mouseover="toggle(true)"
       :id="`picker-${componentId}`"
-      class="absolute -top-10 left-0 z-10"
+      class="absolute -top-10 -left-5 z-10"
     >
       <Transition name="slide-fade">
         <div
           v-if="emojiPickerSelected"
-          class="p-1 shadow-lg flex gap-1 justify-center items-center shadow-primary-100 rounded-xl bg-white"
+          class="p-1 shadow-lg flex gap-1 max-w-xs justify-center items-center shadow-primary-100 rounded-xl bg-white dark:bg-gray-800 dark:shadow-primary-950"
         >
           <template v-if="!!reactions?.length">
             <div

@@ -209,4 +209,20 @@ export class Generics {
 
     return JSON.parse(JSON.stringify(obj));
   };
+  static formatNumber = (number: number): string => {
+    if (!number) {
+      Debug.error({
+        message: '🚨 Error formatting number',
+        source: 'utils/generics.ts',
+        data: number,
+      });
+
+      throw createError({
+        message: '🚨 Error formatting number',
+        statusCode: 500,
+      });
+    }
+
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
 }

@@ -17,12 +17,12 @@
 }
 
 .slide-fade-leave-active {
-  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1) 0.4s;
+  transition: all 0.3s cubic-bezier(1, 0.5, 0.8, 1) 0.3s;
 }
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  transform: translateX(-70px) scale(0.7);
+  transform: translateY(10px) scale(0.9);
   box-shadow: none;
   opacity: 0;
 }
