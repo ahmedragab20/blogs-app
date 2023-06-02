@@ -28,6 +28,8 @@
   const db = useFirestore();
 
   const blogs = useCollection(collection(db, 'blogs'));
+  //TODO:: add sorting
+  //TODO:: fix the wrong user data after adding new blog to the list
 
   const addBlogDialog = ref(false);
   const toggleAddBlogDialog = () => {
