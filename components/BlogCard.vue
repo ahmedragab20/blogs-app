@@ -1,6 +1,9 @@
 <template>
   <UCard v-if="!!blog" class="overflow-visible">
     <template #header>
+      <pre>
+        {{ userBlogPicture.trim() }}
+      </pre>
       <div class="flex justify-between items-center">
         <!-- user -->
         <div class="flex items-center">
@@ -208,7 +211,7 @@
 
   const userBlogPicture = computed(() => {
     return (
-      blog.user?.photoURL ??
+      blog.user?.photoURL ||
       'https://cdn3d.iconscout.com/3d/premium/thumb/boy-avatar-6299533-5187865.png'
     );
   });

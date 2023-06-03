@@ -9,8 +9,12 @@
       <!-- blogs -->
       <template v-if="blogs?.length">
         <!-- TODO:: Sort it properly -->
-        <div v-for="(blog, i) in blogs" class="my-3">
-          <BlogCard :blog="blog" :key="i" />
+        <div v-for="blog in blogs" :key="blog.id" class="my-3">
+          <!--
+            TIP::
+              --- don't use the index as a key, it will cause a wrong data passed into the component issue.
+           -->
+          <BlogCard :blog="blog" />
         </div>
       </template>
     </UContainer>
