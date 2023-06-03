@@ -91,13 +91,15 @@
         <div class="pb-2">
           <div class="flex items-center -space-x-1 overflow-auto py-1">
             <div v-for="(rect, i) in blog.reactions" :key="i" @click="toggleUsersModal">
-              <div class="hover:scale-110 transition-transform duration-300 ease-in-out">
-                <UAvatar
-                  class="select-none pointer-events-none"
-                  :src="rect.icon"
-                  :alt="rect.icon"
-                />
-              </div>
+              <UTooltip :text="rect.name" class="capitalize">
+                <div class="hover:scale-110 transition-transform duration-300 ease-in-out">
+                  <UAvatar
+                    class="select-none pointer-events-none"
+                    :src="rect.icon"
+                    :alt="rect.icon"
+                  />
+                </div>
+              </UTooltip>
             </div>
           </div>
         </div>
@@ -198,14 +200,14 @@
         <div class="text-preset">
           Reactions
 
-          <span v-if="getBlogReaction()?.length" class="text-xs text-gray-500">
-            ({{ getBlogReaction()?.length }})
+          <span v-if="blogReactionUsers?.length" class="text-xs text-gray-500">
+            ({{ blogReactionUsers.length }})
           </span>
         </div>
       </div>
-      <div v-if="getBlogReaction()?.length" class="mt-4">
+      <div v-if="blogReactionUsers?.length" class="mt-4">
         <!-- Users -->
-        <div v-for="(usr, index) in getBlogReaction()" :key="usr.uid">
+        <div v-for="(usr, index) in blogReactionUsers" :key="usr.uid">
           <div class="flex justify-between space-x-1">
             <div class="flex items-center space-x-2">
               <div class="w-8 h-8">
@@ -228,7 +230,7 @@
               />
             </div>
           </div>
-          <AppDivider v-if="index + 1 !== getBlogReaction().length" classes="my-5" />
+          <AppDivider v-if="index + 1 !== blogReactionUsers.length" classes="my-5" />
         </div>
       </div>
     </UCard>
@@ -236,7 +238,7 @@
 </template>
 <script setup lang="ts">
   import { useGeneralStore } from '~/stores/general';
-  import { Blog, BlogReaction, FirestoreUser, ReactionReturn, ReactionUser, Tag } from '~/types';
+  import { Blog, BlogReaction, ReactionReturn, ReactionUser, Tag } from '~/types';
   import Reaction from '~/utils/Reaction';
   const { blogTags } = useGeneralStore();
   const { clickHandler } = useGuest();
@@ -391,7 +393,7 @@
     }
   };
 
-  const blogReactionUsers = ref<FirestoreUser>();
+  const blogReactionUsers = ref<ReactionUser[]>();
   const getBlogReaction = () => {
     const results = new Set<ReactionUser[]>();
     blog.reactions?.forEach((rc) => {
@@ -401,18 +403,13 @@
       });
     });
 
-    return Array.from(results).flat();
+    blogReactionUsers.value = Array.from(results)?.flat();
   };
 
   const usersModal = ref(false);
   const toggleUsersModal = () => {
     usersModal.value = !usersModal.value;
   };
-  watch(usersModal, (val) => {
-    if (val) {
-      getBlogReaction();
-    }
-  });
 
   watchEffect(() => {
     blogClone.value = Generics.clone(blog);
@@ -424,5 +421,6 @@
   });
   onMounted(() => {
     localReactionsCount.value = allReactionsCount.value;
+    getBlogReaction();
   });
 </script>
