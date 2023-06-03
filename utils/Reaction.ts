@@ -2,7 +2,8 @@ import { Blog, BlogReaction, FirestoreUser, ReactionReturn } from '~/types';
 interface ReactionOptions {
   getUsers?: boolean;
   count?: boolean;
-  [key: string]: any;
+  getReactions?: boolean;
+  [key: string]: boolean | undefined;
 }
 
 export default class Reaction {
@@ -153,6 +154,10 @@ export default class Reaction {
       if (options?.count) {
         Reaction.reactionCount = blog.reactions?.length || 0;
         Reaction.theReturn['count'] = Reaction.reactionCount;
+      }
+
+      if (options?.getReactions) {
+        Reaction.theReturn['reactions'] = blog.reactions;
       }
 
       return Reaction.theReturn;

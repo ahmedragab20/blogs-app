@@ -40,8 +40,8 @@
             My Blogs ({{ myBlogs.length }})
           </h3>
         </div>
-        <div v-for="(blog, i) in myBlogs" class="my-3 w-full sm:max-w-[600px]">
-          <BlogCard :blog="blog" :key="i" />
+        <div v-for="blog in myBlogs" :key="blog.blogId" class="my-3 w-full sm:max-w-[600px]">
+          <BlogCard :blog="blog" />
         </div>
       </template>
     </div>
@@ -321,7 +321,7 @@
   });
 
   watchEffect(async () => {
-    myBlogs.value = await BlogHandler.getUserBlogs(user.value?.uid as string);
+    myBlogs.value = (await BlogHandler.getUserBlogs(user.value?.uid as string)) as Blog[];
   });
   //TODO:: add verification email cycle
   //TODO:: add password reset cycle

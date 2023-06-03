@@ -58,6 +58,9 @@
   const props = defineProps<{
     toggleAddBlogDialog: () => void;
   }>();
+  const emit = defineEmits<{
+    done: [status: boolean];
+  }>();
 
   const { blogTags } = useGeneralStore();
   const toast = useToast();
@@ -100,6 +103,7 @@
       const newDoc = await BlogHandler.create(blog.value);
 
       if (!!newDoc) {
+        emit('done', true);
         toast.add({
           title: 'Blog added successfully',
           description: 'Your blog has been added successfully',

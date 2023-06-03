@@ -4,6 +4,7 @@ import {
   collection,
   deleteDoc,
   getDocs,
+  onSnapshot,
   query,
   updateDoc,
   where,
@@ -144,19 +145,53 @@ export default class BlogHandler {
           source: 'BlogHandler.ts',
           data: userId,
         });
-
         return;
       }
 
       const db: Firestore = useFirestore();
       const q = query(collection(db, 'blogs'), where('user.uid', '==', userId));
-      const querySnapshot = await getDocs(q);
-      const blogs = querySnapshot.docs.map((doc) => doc.data()) as Blog[];
+      let data = [] as Blog[];
 
-      return blogs;
+      return new Promise((resolve, reject) => {
+        onSnapshot(q, (querySnapshot) => {
+          data.length = 0;
+          data = querySnapshot.docs.map((doc) => doc.data()) as Blog[];
+          resolve(data.sort((a, b) => -Generics.sortByDate(a.createdAt, b.createdAt)));
+        });
+      });
     } catch (error) {
       Debug.error({
         message: `Couldn't get blogs for user with id: ${userId}`,
+        data: error,
+        useOnProduction: true,
+      });
+      throw createError({
+        message: "Couldn't get blogs",
+        statusCode: 500,
+      });
+    }
+  }
+  static async getAll() {
+    try {
+      const db: Firestore = useFirestore();
+      const q = query(collection(db, 'blogs'));
+      let data = [] as Blog[];
+
+      return new Promise((resolve, reject) => {
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+          data.length = 0;
+          data = querySnapshot.docs.map((doc) => doc.data()) as Blog[];
+          resolve(data.sort((a, b) => -Generics.sortByDate(a.createdAt, b.createdAt))); // the minus sign is to sort in descending order
+        });
+
+        // Return an unsubscribe function to stop listening to changes
+        return () => {
+          unsubscribe();
+        };
+      });
+    } catch (error) {
+      Debug.error({
+        message: `Couldn't get blogs`,
         data: error,
         useOnProduction: true,
       });

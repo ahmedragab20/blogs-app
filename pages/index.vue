@@ -9,12 +9,12 @@
       <!-- blogs -->
       <template v-if="blogs?.length">
         <!-- TODO:: Sort it properly -->
-        <div v-for="blog in blogs" :key="blog.id" class="my-3">
+        <div v-for="blog in blogs" :key="blog.blogId" class="my-3">
           <!--
             TIP::
               --- don't use the index as a key, it will cause a wrong data passed into the component issue.
            -->
-          <BlogCard :blog="blog" />
+          <BlogCard :blog="blog" @re-fetch="setBlogsData" />
         </div>
       </template>
     </UContainer>
@@ -22,16 +22,15 @@
 
   <!-- add blog dialog -->
   <UModal v-model="addBlogDialog">
-    <AddBlog :toggle-add-blog-dialog="toggleAddBlogDialog" />
+    <AddBlog :toggle-add-blog-dialog="toggleAddBlogDialog" @done="setBlogsData" />
   </UModal>
 </template>
 
 <script setup lang="ts">
-  import { collection } from 'firebase/firestore';
+  import { Blog } from '~/types';
   const { clickHandler } = useGuest();
-  const db = useFirestore();
 
-  const blogs = useCollection(collection(db, 'blogs'));
+  const blogs = ref<Blog[]>();
   //TODO:: add sorting
   //TODO:: fix the wrong user data after adding new blog to the list
 
@@ -39,7 +38,13 @@
   const toggleAddBlogDialog = () => {
     addBlogDialog.value = !addBlogDialog.value;
   };
+  const setBlogsData = async () => {
+    blogs.value = (await BlogHandler.getAll()) as Blog[];
+  };
 
+  watchEffect(async () => {
+    await setBlogsData();
+  });
   defineShortcuts({
     N: {
       usingInput: false,

@@ -90,7 +90,7 @@
       <div>
         <div class="pb-2">
           <div class="flex items-center -space-x-1 overflow-auto py-1">
-            <div v-for="(rect, i) in blog.reactions" :key="i" @click="toggleUsersModal">
+            <div v-for="(rect, i) in reactions" :key="i" @click="toggleUsersModal">
               <UTooltip :text="rect.name" class="capitalize">
                 <div class="hover:scale-110 transition-transform duration-300 ease-in-out">
                   <UAvatar
@@ -246,6 +246,9 @@
   const { blog } = defineProps<{
     blog: Partial<Blog>;
   }>();
+  const emit = defineEmits<{
+    're-fetch': [status: boolean];
+  }>();
   const blogClone = ref<Partial<Blog>>();
 
   const router = useRouter();
@@ -310,8 +313,16 @@
       };
 
       await BlogHandler.update(updatedBlog);
+      console.log('updated blog', updatedBlog);
 
-      blogClone.value = JSON.parse(JSON.stringify(updatedBlog));
+      blogClone.value = Generics.clone(updatedBlog);
+      blogClone.value.tags = Generics.clone(updatedTags.value); // explicitly re clone tags
+      console.log({
+        blogClone: blogClone.value,
+        updatedBlog,
+      });
+
+      updateBlogError.value = '';
       toggleUpdateBlogMode();
     } catch (error) {
       console.log(error);
@@ -324,6 +335,10 @@
     const blogTitle = document.getElementById('blog-title') as HTMLElement;
     const blogSubtitle = document.getElementById('blog-subtitle') as HTMLElement;
     const blogContent = document.getElementById('blog-content') as HTMLElement;
+    console.log({
+      blogClone: blogClone.value,
+      blog,
+    });
 
     blogTitle.innerText = blogClone.value?.title ?? '';
     blogSubtitle.innerText = blogClone.value?.subtitle ?? '';
@@ -345,6 +360,7 @@
     try {
       deletingBlog.value = true;
       await BlogHandler.delete(blogId);
+      emit('re-fetch', true);
       toggleDeleteBlogModal();
     } catch (error) {
       console.log(error);
@@ -369,29 +385,7 @@
   const localReactionsCount = ref();
 
   const myReaction = ref<BlogReaction>();
-
-  const emojiSelected = async (reaction: BlogReaction) => {
-    const user = useCurrentUser()?.value?.uid;
-    // check if user is logged in
-    clickHandler(); //TODO:: improve the naming of this function
-    if (!user) return;
-
-    //@ts-ignore
-    const { count, users }: Partial<ReactionReturn> = await Reaction.react(blog.blogId!, reaction, {
-      count: true,
-      getUsers: true,
-    });
-
-    localReactionsCount.value = count;
-    //@ts-ignore
-    blogReactionUsers.value = users; //TODO:: improve the typescript experience
-
-    if (myReaction.value?.key === reaction.key) {
-      myReaction.value = undefined;
-    } else {
-      myReaction.value = reaction;
-    }
-  };
+  const reactions = ref<BlogReaction[]>();
 
   const blogReactionUsers = ref<ReactionUser[]>();
   const getBlogReaction = () => {
@@ -411,15 +405,44 @@
     usersModal.value = !usersModal.value;
   };
 
-  watchEffect(() => {
+  const emojiSelected = async (reaction: BlogReaction) => {
+    const user = useCurrentUser()?.value?.uid;
+    // check if user is logged in
+    clickHandler(); //TODO:: improve the naming of this function
+    if (!user) return;
+
+    //@ts-ignore
+    const blg: Partial<ReactionReturn> = await Reaction.react(blog.blogId!, reaction, {
+      count: true,
+      getUsers: true,
+      getReactions: true,
+    });
+
+    localReactionsCount.value = blg?.count;
+    //@ts-ignore
+    blogReactionUsers.value = blg?.users; //TODO:: improve the typescript experience
+    reactions.value = blg?.reactions;
+
+    Debug.log({
+      message: 'Reactions + count + users + blg',
+      data: { reactions: reactions.value, count: blg?.count, users: blg?.users, blg },
+    });
+
+    if (myReaction.value?.key === reaction.key) {
+      myReaction.value = undefined;
+    } else {
+      myReaction.value = reaction;
+    }
+  };
+
+  onMounted(() => {
     blogClone.value = Generics.clone(blog);
     updatedTags.value = blogClone.value?.tags ?? [];
+    reactions.value = blogClone.value?.reactions ?? [];
 
     myReaction.value = blogClone.value.reactions?.find((rc: BlogReaction) => {
       return rc?.users?.some((u) => u.uid === user.value?.uid);
     });
-  });
-  onMounted(() => {
     localReactionsCount.value = allReactionsCount.value;
     getBlogReaction();
   });
