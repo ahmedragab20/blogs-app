@@ -195,12 +195,41 @@
   <UModal v-model="usersModal">
     <UCard>
       <div class="flex items-center justify-between">
-        <div class="text-preset">Reactions</div>
+        <div class="text-preset">
+          Reactions
+
+          <span v-if="getBlogReaction()?.length" class="text-xs text-gray-500">
+            ({{ getBlogReaction()?.length }})
+          </span>
+        </div>
       </div>
-      <div class="mt-4">
-        <pre>
-          {{ getBlogReaction() }}
-        </pre>
+      <div v-if="getBlogReaction()?.length" class="mt-4">
+        <!-- Users -->
+        <div v-for="(usr, index) in getBlogReaction()" :key="usr.uid">
+          <div class="flex justify-between space-x-1">
+            <div class="flex items-center space-x-2">
+              <div class="w-8 h-8">
+                <UAvatar :src="usr.photoURL" :alt="usr.displayName" />
+              </div>
+              <div>
+                <div class="-mb-1">
+                  {{ usr.displayName }}
+                </div>
+                <div class="text-xs text-gray-500">
+                  {{ usr.email }}
+                </div>
+              </div>
+            </div>
+            <div v-if="usr.reaction?.icon" class="flex items-center justify-end">
+              <UAvatar
+                class="select-none pointer-events-none"
+                :src="usr.reaction?.icon"
+                alt="reaction icon"
+              />
+            </div>
+          </div>
+          <AppDivider v-if="index + 1 !== getBlogReaction().length" classes="my-5" />
+        </div>
       </div>
     </UCard>
   </UModal>
@@ -363,27 +392,18 @@
   };
 
   const blogReactionUsers = ref<FirestoreUser>();
-  const getBlogReaction = (reaction?: BlogReaction) => {
+  const getBlogReaction = () => {
     const results = new Set<ReactionUser[]>();
-    if (!reaction) {
-      // get all users with the reaction for each one
-      blog.reactions?.forEach((rc) => {
-        if (rc.users?.length) {
-          results.add(rc.users);
-        }
+    blog.reactions?.forEach((rc) => {
+      rc.users.forEach((u: ReactionUser) => {
+        // @ts-ignore
+        results.add(u);
       });
-    } else {
-      // get all users with the reaction
-      const rc = blog.reactions?.find((rc) => rc.key === reaction.key);
-      if (rc?.users?.length) {
-        results.add(rc.users || []);
-      }
-    }
+    });
 
-    const [value] = Array.from(results || []);
-
-    return value;
+    return Array.from(results).flat();
   };
+
   const usersModal = ref(false);
   const toggleUsersModal = () => {
     usersModal.value = !usersModal.value;
