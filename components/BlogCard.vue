@@ -1,9 +1,6 @@
 <template>
   <UCard v-if="!!blog" class="overflow-visible">
     <template #header>
-      <pre>
-        {{ userBlogPicture.trim() }}
-      </pre>
       <div class="flex justify-between items-center">
         <!-- user -->
         <div class="flex items-center">
