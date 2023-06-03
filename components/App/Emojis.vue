@@ -61,6 +61,7 @@
     toggle();
     emit('update-emoji', emoji);
   };
+
   onMounted(() => {
     const picker = document.getElementById('picker') as HTMLElement;
     const pickerBtn = document.getElementById('picker-btn') as HTMLElement;

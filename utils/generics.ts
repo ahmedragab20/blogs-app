@@ -224,4 +224,31 @@ export class Generics {
 
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
+  static sortByDate = (a: Date, b: Date): number => {
+    //TODO: Refactor this
+    if (!a || !b) {
+      Debug.error({
+        message: '🚨 Error sorting dates',
+        source: 'utils/generics.ts',
+        data: { a, b },
+      });
+
+      throw createError({
+        message: '🚨 Error sorting dates',
+        statusCode: 500,
+      });
+    }
+
+    const originalDateA: Date = this.getObjectInfoSeparate(a)?.keys?.includes('seconds')
+      ? // @ts-ignore
+        new Date(a.seconds * 1000)
+      : a;
+
+    const originalDateB: Date = this.getObjectInfoSeparate(b)?.keys?.includes('seconds')
+      ? // @ts-ignore
+        new Date(b.seconds * 1000)
+      : b;
+
+    return originalDateA.getTime() - originalDateB.getTime();
+  };
 }

@@ -91,6 +91,7 @@ export default class Reaction {
           ...reaction.users,
           {
             createdAt: new Date(),
+            reaction,
             ...usr,
           },
         ];
@@ -121,6 +122,7 @@ export default class Reaction {
             users: [
               {
                 createdAt: new Date(),
+                reaction,
                 ...usr,
               },
             ],

@@ -90,7 +90,7 @@
       <div>
         <div class="pb-2">
           <div class="flex items-center -space-x-1 overflow-auto py-1">
-            <div v-for="(rect, i) in blog.reactions" :key="i">
+            <div v-for="(rect, i) in blog.reactions" :key="i" @click="toggleUsersModal">
               <div class="hover:scale-110 transition-transform duration-300 ease-in-out">
                 <UAvatar
                   class="select-none pointer-events-none"
@@ -190,10 +190,24 @@
       <p class="px-1 text-preset">Are you sure you want to delete this blog?</p>
     </AppConfirm>
   </UModal>
+
+  <!-- Users Modal -->
+  <UModal v-model="usersModal">
+    <UCard>
+      <div class="flex items-center justify-between">
+        <div class="text-preset">Reactions</div>
+      </div>
+      <div class="mt-4">
+        <pre>
+          {{ getBlogReaction() }}
+        </pre>
+      </div>
+    </UCard>
+  </UModal>
 </template>
 <script setup lang="ts">
   import { useGeneralStore } from '~/stores/general';
-  import { Blog, BlogReaction, ReactionReturn, Tag } from '~/types';
+  import { Blog, BlogReaction, FirestoreUser, ReactionReturn, ReactionUser, Tag } from '~/types';
   import Reaction from '~/utils/Reaction';
   const { blogTags } = useGeneralStore();
   const { clickHandler } = useGuest();
@@ -332,11 +346,14 @@
     if (!user) return;
 
     //@ts-ignore
-    const { count }: Partial<ReactionReturn> = await Reaction.react(blog.blogId!, reaction, {
+    const { count, users }: Partial<ReactionReturn> = await Reaction.react(blog.blogId!, reaction, {
       count: true,
+      getUsers: true,
     });
 
     localReactionsCount.value = count;
+    //@ts-ignore
+    blogReactionUsers.value = users; //TODO:: improve the typescript experience
 
     if (myReaction.value?.key === reaction.key) {
       myReaction.value = undefined;
@@ -344,6 +361,38 @@
       myReaction.value = reaction;
     }
   };
+
+  const blogReactionUsers = ref<FirestoreUser>();
+  const getBlogReaction = (reaction?: BlogReaction) => {
+    const results = new Set<ReactionUser[]>();
+    if (!reaction) {
+      // get all users with the reaction for each one
+      blog.reactions?.forEach((rc) => {
+        if (rc.users?.length) {
+          results.add(rc.users);
+        }
+      });
+    } else {
+      // get all users with the reaction
+      const rc = blog.reactions?.find((rc) => rc.key === reaction.key);
+      if (rc?.users?.length) {
+        results.add(rc.users || []);
+      }
+    }
+
+    const [value] = Array.from(results || []);
+
+    return value;
+  };
+  const usersModal = ref(false);
+  const toggleUsersModal = () => {
+    usersModal.value = !usersModal.value;
+  };
+  watch(usersModal, (val) => {
+    if (val) {
+      getBlogReaction();
+    }
+  });
 
   watchEffect(() => {
     blogClone.value = Generics.clone(blog);
