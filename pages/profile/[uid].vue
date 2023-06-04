@@ -1,5 +1,11 @@
 <template>
   <UContainer class="min-h-[90vh]">
+    <div v-if="profileUser && !profileUser.displayName" class="flex justify-center">
+      <UBadge size="lg" class="flex justify-center font-extrabold" color="yellow">
+        🚧 we recommend for you to update your profile to get the best experience possible 🚧
+      </UBadge>
+    </div>
+
     <div v-if="profileUser?.uid" class="flex flex-col items-center justify-center">
       <div class="w-32 h-32 rounded-full overflow-hidden shadow-xl">
         <img
