@@ -37,7 +37,7 @@
         <AppDivider class="mt-6" />
         <div>
           <h3 class="font-bold font-headline text-primary-500 mt-4">
-            My Blogs ({{ myBlogs.length }})
+            {{ myProfile ? 'My' : `${profileUser.displayName}'s` }} Blogs ({{ myBlogs.length }})
           </h3>
         </div>
         <div v-for="blog in myBlogs" :key="blog.blogId" class="my-3 w-full sm:max-w-[600px]">
