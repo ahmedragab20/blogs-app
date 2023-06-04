@@ -313,19 +313,16 @@
       };
 
       await BlogHandler.update(updatedBlog);
-      console.log('updated blog', updatedBlog);
 
       blogClone.value = Generics.clone(updatedBlog);
       blogClone.value.tags = Generics.clone(updatedTags.value); // explicitly re clone tags
-      console.log({
-        blogClone: blogClone.value,
-        updatedBlog,
-      });
-
       updateBlogError.value = '';
       toggleUpdateBlogMode();
     } catch (error) {
-      console.log(error);
+      Debug.error({
+        message: 'Error updating blog',
+        data: error,
+      });
     } finally {
       updatingBlog.value = false;
     }
@@ -335,10 +332,6 @@
     const blogTitle = document.getElementById('blog-title') as HTMLElement;
     const blogSubtitle = document.getElementById('blog-subtitle') as HTMLElement;
     const blogContent = document.getElementById('blog-content') as HTMLElement;
-    console.log({
-      blogClone: blogClone.value,
-      blog,
-    });
 
     blogTitle.innerText = blogClone.value?.title ?? '';
     blogSubtitle.innerText = blogClone.value?.subtitle ?? '';
@@ -363,7 +356,10 @@
       emit('re-fetch', true);
       toggleDeleteBlogModal();
     } catch (error) {
-      console.log(error);
+      Debug.error({
+        message: 'Error deleting blog',
+        data: error,
+      });
     } finally {
       deletingBlog.value = false;
     }
@@ -426,11 +422,6 @@
     //@ts-ignore
     blogReactionUsers.value = blg?.users; //TODO:: improve the typescript experience
     reactions.value = blg?.reactions;
-
-    Debug.log({
-      message: 'Reactions + count + users + blg',
-      data: { reactions: reactions.value, count: blg?.count, users: blg?.users, blg },
-    });
 
     if (myReaction.value?.key === reaction.key) {
       myReaction.value = undefined;

@@ -9,7 +9,7 @@
       <a href="https://github.com/ahmedragab20" target="_blank" class="text-primary-500 mx-1">
         Ragab
       </a>
-      <small class="text-gray-400 dark:text-gray-500">&copy; {{ new Date().getFullYear() }}</small>
+      <small class="text-gray-400 dark:text-gray-500">&copy; 2023</small>
     </div>
 
     <!-- 🤷🏻‍♂️ - so global -->

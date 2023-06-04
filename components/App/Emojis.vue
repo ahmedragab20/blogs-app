@@ -1,14 +1,10 @@
 <template>
   <div @mouseleave="toggle(false)" class="relative">
-    <UButton :id="`picker-btn-${componentId}`" v-bind="btnBinds" @click="toggle()">
+    <UButton @mouseover="toggle(true)" :id="`picker-btn-${componentId}`" v-bind="btnBinds">
       <slot />
     </UButton>
 
-    <div
-      @mouseover="toggle(true)"
-      :id="`picker-${componentId}`"
-      class="absolute -top-10 -left-5 z-10"
-    >
+    <div :id="`picker-${componentId}`" class="absolute -top-10 -left-5 z-10">
       <Transition name="slide-fade">
         <div
           v-if="emojiPickerSelected"
@@ -55,7 +51,12 @@
 
   const emojiPickerSelected = ref(false);
   const toggle = (v?: boolean) => {
-    emojiPickerSelected.value = v ?? !emojiPickerSelected.value;
+    setTimeout(
+      () => {
+        emojiPickerSelected.value = v ?? !emojiPickerSelected.value;
+      },
+      v === true ? 300 : 200
+    );
   };
   const updateEmoji = (emoji: BlogReaction) => {
     toggle();
@@ -63,8 +64,8 @@
   };
 
   onMounted(() => {
-    const picker = document.getElementById('picker') as HTMLElement;
-    const pickerBtn = document.getElementById('picker-btn') as HTMLElement;
+    const picker = document.getElementById(`picker-${componentId.value}`) as HTMLElement;
+    const pickerBtn = document.getElementById(`picker-btn-${componentId.value}`) as HTMLElement;
 
     document.addEventListener('click', (e) => {
       if (
@@ -73,7 +74,7 @@
         !picker.contains(e.target as Node) &&
         !pickerBtn.contains(e.target as Node)
       ) {
-        emojiPickerSelected.value = false;
+        toggle(false);
       }
     });
   });
