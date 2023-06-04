@@ -321,7 +321,7 @@
   });
 
   watchEffect(async () => {
-    myBlogs.value = (await BlogHandler.getUserBlogs(user.value?.uid as string)) as Blog[];
+    myBlogs.value = (await BlogHandler.getUserBlogs(route.params?.uid as string)) as Blog[];
   });
   //TODO:: add verification email cycle
   //TODO:: add password reset cycle
