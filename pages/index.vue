@@ -8,12 +8,7 @@
 
       <!-- blogs -->
       <template v-if="blogs?.length">
-        <!-- TODO:: Sort it properly -->
         <div v-for="blog in blogs" :key="blog.blogId" class="my-3">
-          <!--
-            TIP::
-              --- don't use the index as a key, it will cause a wrong data passed into the component issue.
-           -->
           <BlogCard :blog="blog" @re-fetch="setBlogsData" />
         </div>
       </template>
@@ -31,8 +26,8 @@
   const { clickHandler } = useGuest();
 
   const blogs = ref<Blog[]>();
-  //TODO:: add sorting
-  //TODO:: fix the wrong user data after adding new blog to the list
+  //✅TODO:: add sorting
+  //✅TODO:: fix the wrong user data after adding new blog to the list
 
   const addBlogDialog = ref(false);
   const toggleAddBlogDialog = () => {

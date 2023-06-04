@@ -410,10 +410,10 @@
   };
 
   const emojiSelected = async (reaction: BlogReaction) => {
-    const user = useCurrentUser()?.value?.uid;
+    const user = useCurrentUser();
     // check if user is logged in
     clickHandler(); //TODO:: improve the naming of this function
-    if (!user) return;
+    if (typeof user !== 'object' || !user.value?.email) return;
 
     //@ts-ignore
     const blg: Partial<ReactionReturn> = await Reaction.react(blog.blogId!, reaction, {

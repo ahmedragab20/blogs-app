@@ -1,5 +1,5 @@
 <template>
-  <div v-if="loaded" id="ragab-app">
+  <div v-if="loaded" id="ragab-app" :class="{ 'pb-[250px]': !user }">
     <!-- 🚧 - App Layouts -->
     <NuxtLayout :name="layout"></NuxtLayout>
 
@@ -13,7 +13,7 @@
         <AuthLand :target="chosenAuthLand" />
       </UModal>
       <!-- Auth Banner -->
-      <AuthBanner @select-type="chooseAuthLand" />
+      <AuthBanner ref="auth-banner" @select-type="chooseAuthLand" />
     </template>
   </div>
   <div v-else class="flex justify-center items-center flex-col h-screen gap-4">
@@ -44,6 +44,7 @@
     authStore.chooseAuthLand(land);
     authStore.toggleAuthLanded(true);
   };
+  const authBanner = ref<HTMLElement>();
 
   const initTheme = () => {
     if (process.client) {
@@ -65,13 +66,6 @@
 
   onMounted(async () => {
     initTheme();
-
-    // if AuthBanner is shown, take the height of it add add it as bottom padding to the body
-    const authBanner = document.querySelector('.auth-banner');
-    if (authBanner) {
-      const authBannerHeight = authBanner.clientHeight;
-      document.body.style.paddingBottom = `${authBannerHeight}px`;
-    }
 
     const getUser = await getCurrentUser().finally(() => {
       loaded.value = true;

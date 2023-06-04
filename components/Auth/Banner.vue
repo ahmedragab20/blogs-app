@@ -1,6 +1,6 @@
 <template>
-  <div class="fixed bottom-0 w-full p-2 bg-gray-200 shadow-inner dark:bg-gray-700 sm:p-5">
-    <div class="flex flex-col items-center justify-center gap-3 py-5">
+  <div class="fixed bottom-0 w-full z-50 p-2 min-h-[230px] shadow-inner sm:p-5 backdrop-blur-lg">
+    <div class="flex absolute z-20 inset-0 flex-col items-center justify-center gap-3 py-5">
       <!-- headline -->
       <div class="text-center">
         <h3 class="text-2xl sm:text-3xl font-headline">
@@ -16,6 +16,7 @@
         <UButton @click="selectType('register')" size="lg" variant="soft"> Register </UButton>
       </div>
     </div>
+    <div class="absolute inset-0 z-10 dark:bg-gray-700 bg-gray-100 opacity-50"></div>
   </div>
 </template>
 <script setup lang="ts">
