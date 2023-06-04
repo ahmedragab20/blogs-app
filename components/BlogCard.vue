@@ -222,10 +222,10 @@
                 </div>
               </div>
             </div>
-            <div v-if="usr.reaction?.icon" class="flex items-center justify-end">
+            <div v-if="!!getReactionByKey(usr.reactionKey)" class="flex items-center justify-end">
               <UAvatar
                 class="select-none pointer-events-none"
-                :src="usr.reaction?.icon"
+                :src="getReactionByKey(usr.reactionKey)?.icon"
                 alt="reaction icon"
               />
             </div>
@@ -403,6 +403,10 @@
   const usersModal = ref(false);
   const toggleUsersModal = () => {
     usersModal.value = !usersModal.value;
+  };
+
+  const getReactionByKey = (key: string) => {
+    return reactions.value?.find((i) => i.key === key);
   };
 
   const emojiSelected = async (reaction: BlogReaction) => {

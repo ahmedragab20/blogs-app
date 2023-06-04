@@ -153,7 +153,11 @@ export default class Reaction {
       }
 
       if (options?.count) {
-        Reaction.reactionCount = blog.reactions?.length || 0;
+        let count = 0;
+        blog.reactions.forEach((r) => {
+          count += r.users?.length!;
+        });
+        Reaction.reactionCount = count;
         Reaction.theReturn['count'] = Reaction.reactionCount;
       }
 
