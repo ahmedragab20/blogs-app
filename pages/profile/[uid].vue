@@ -1,8 +1,12 @@
 <template>
   <UContainer class="min-h-[90vh]">
-    <div v-if="profileUser && !profileUser.displayName" class="flex justify-center">
+    <div v-if="profileUser && !profileUser.displayName" class="flex justify-center mb-4">
       <UBadge size="lg" class="flex justify-center font-extrabold" color="yellow">
-        🚧 we recommend for you to update your profile to get the best experience possible 🚧
+        <div class="text-center capitalize">
+          <div>Hold up!!🤌🏻</div>
+          we recommend for you to update your profile with the basic data needed to get the best
+          experience possible
+        </div>
       </UBadge>
     </div>
 
@@ -329,6 +333,13 @@
   watchEffect(async () => {
     myBlogs.value = (await BlogHandler.getUserBlogs(route.params?.uid as string)) as Blog[];
   });
+
+  // page title
+  const pageTitle = computed(() => `${profileUser.value?.displayName || 'User'}'s Profile`);
+  useHead({
+    title: pageTitle,
+  });
+
   //TODO:: add verification email cycle
   //TODO:: add password reset cycle
 </script>

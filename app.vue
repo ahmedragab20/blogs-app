@@ -3,6 +3,15 @@
     <!-- 🚧 - App Layouts -->
     <NuxtLayout :name="layout"></NuxtLayout>
 
+    <!-- Footer -->
+    <div class="py-10 px-4 flex justify-center items-center">
+      Made with ❤️ by
+      <a href="https://github.com/ahmedragab20" target="_blank" class="text-primary-500 mx-1">
+        Ragab
+      </a>
+      <small class="text-gray-400 dark:text-gray-500">&copy; {{ new Date().getFullYear() }}</small>
+    </div>
+
     <!-- 🤷🏻‍♂️ - so global -->
 
     <!-- Toasts -->

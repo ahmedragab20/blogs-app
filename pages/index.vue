@@ -46,4 +46,8 @@
       handler: () => toggleAddBlogDialog(),
     },
   });
+
+  useHead({
+    title: 'ArBlogs | Home',
+  });
 </script>
