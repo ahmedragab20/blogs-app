@@ -4,6 +4,7 @@ import {
   collection,
   deleteDoc,
   getDocs,
+  limit,
   onSnapshot,
   query,
   updateDoc,
@@ -77,17 +78,20 @@ export default class BlogHandler {
 
       const db: Firestore = useFirestore();
       const querySnapshot = await getDocs(
-        query(collection(db, 'blogs'), where('blogId', '==', blog.blogId))
+        query(collection(db, 'blogs'), where('blogId', '==', blog.blogId), limit(1))
       );
 
-      for (const doc of querySnapshot.docs) {
-        const docRef = doc.ref;
+      if (!querySnapshot.empty) {
+        const docRef = querySnapshot.docs[0].ref;
 
-        if (!!docRef) {
-          return updateDoc(docRef, {
-            ...blog,
-          });
-        }
+        await updateDoc(docRef, {
+          ...blog,
+        });
+      } else {
+        Debug.warn({
+          message: `🚧 No blog found with id: ${blog.blogId}`,
+          data: blog,
+        });
       }
     } catch (error) {
       Debug.error({

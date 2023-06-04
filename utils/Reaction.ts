@@ -141,6 +141,7 @@ export default class Reaction {
       };
 
       checkAndUpdateReaction();
+
       await BlogHandler.update(blog);
 
       if (options?.['getUsers']) {
