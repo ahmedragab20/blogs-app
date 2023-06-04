@@ -24,7 +24,7 @@ interface Reaction {
 
 interface ReactionUser extends FirestoreUser {
   createdAt: Date;
-  reaction: Reaction;
+  reactionKey: string;
 }
 
 interface BlogReaction extends Reaction {
