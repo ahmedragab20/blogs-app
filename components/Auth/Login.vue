@@ -108,6 +108,7 @@
           description: 'You have successfully logged in',
           type: 'success',
         });
+        if (process.client) window.location.reload();
       })
       .catch((error) => {
         errorMsg.value = error.message;
