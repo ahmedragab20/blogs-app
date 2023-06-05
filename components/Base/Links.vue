@@ -108,7 +108,9 @@
     await signOut(auth)
       .then(() => {
         toast.add({ title: 'you have been logged out' });
-        router.push('/');
+        if (process.client) {
+          window.location.reload();
+        }
       })
       .catch((error) => {
         throw createError({
