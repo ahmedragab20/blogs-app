@@ -55,7 +55,7 @@
       () => {
         emojiPickerSelected.value = v ?? !emojiPickerSelected.value;
       },
-      v === true ? 300 : 200
+      v === true ? 100 : 300
     );
   };
   const updateEmoji = (emoji: BlogReaction) => {

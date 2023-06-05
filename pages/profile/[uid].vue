@@ -57,7 +57,7 @@
     </div>
     <div v-else-if="!loading" class="flex flex-col items-center justify-center min-h-[60vh] gap-5">
       <UIcon name="i-heroicons-x-circle" class="text-6xl text-red-300 dark:bg-red-500" />
-      <UBadge color="red">The user is no longer exist</UBadge>
+      <UBadge color="red">The user doesn't exist</UBadge>
     </div>
     <div v-else class="flex justify-center items-center">
       <AppSpinner />
@@ -209,9 +209,8 @@
   const db = useFirestore();
   const user = useCurrentUser();
   const myProfile = computed(() => Generics.valuesMatch(user.value?.uid, route.params?.uid));
-  const foreignUser = ref<FirestoreUser>();
 
-  const profileUser = computed(() => (myProfile.value ? user.value : foreignUser.value));
+  const profileUser = ref<FirestoreUser>();
 
   const myBlogs = ref<Blog[]>();
 
@@ -225,6 +224,11 @@
   const updateProfileDialog = ref(false);
   const toggleUpdateProfileDialog = (state: boolean) => {
     updateProfileDialog.value = [true, false].includes(state) ? state : !updateProfileDialog.value;
+
+    if (updateProfileDialog.value) {
+      updateUserForm.value.photoURL = profileUser.value?.photoURL || '';
+      updateUserForm.value.displayName = profileUser.value?.displayName || '';
+    }
   };
 
   const updateUserForm = ref({
@@ -270,6 +274,7 @@
           photoURL,
         });
         newPic.value = photoURL;
+        profileUser.value = await getProfileUser();
         toast.add({ title: 'Profile updated successfully' });
         toggleUpdateProfileDialog(false);
       })
@@ -282,6 +287,12 @@
       .finally(() => {
         updatingProfile.value = false;
       });
+  };
+
+  const getProfileUser = async () => {
+    return await getFirestoreUser(db, route.params?.uid as string).finally(() => {
+      loading.value = false;
+    });
   };
 
   // delete account
@@ -322,12 +333,8 @@
     updateUserForm.value.displayName = user.value?.displayName || '';
   });
   onBeforeMount(async () => {
-    if (!myProfile.value) {
-      loading.value = true;
-      foreignUser.value = await getFirestoreUser(db, route.params?.uid as string).finally(() => {
-        loading.value = false;
-      })!;
-    }
+    loading.value = true;
+    profileUser.value = await getProfileUser()!;
   });
 
   watchEffect(async () => {
