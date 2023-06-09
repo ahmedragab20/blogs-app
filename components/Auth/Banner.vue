@@ -4,7 +4,7 @@
       <!-- headline -->
       <div class="text-center">
         <h3 class="text-2xl sm:text-3xl font-headline">
-          You're using <span class="text-primary-500">guest mode</span>, my fiend!!
+          You're using <span class="text-primary-500">guest mode</span>, my friend!!
         </h3>
         <p class="px-5 my-2 sm:text-lg sm:px-0">
           login or register to get the most out of the app. let's go!
